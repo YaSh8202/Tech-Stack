@@ -15,7 +15,7 @@ export default function Enter({}) {
   //1. user signed in, has username <SignInButton />
 
   return (
-    <main className=" w-[33vw] flex flex-col mx-auto my-[10vh] max-w-4xl" >
+    <main className=" w-[33vw] flex flex-col mx-auto my-[10vh] max-w-4xl">
       {user ? (
         !username ? (
           <UsernameForm />
@@ -135,7 +135,7 @@ function UsernameForm() {
   return (
     !username && (
       <section>
-        <h3 className="text-xl font-bold" >Choose Username</h3>
+        <h3 className="text-xl font-bold">Choose Username</h3>
         <form onSubmit={onSubmit}>
           <input
             className="user-input"
@@ -150,7 +150,7 @@ function UsernameForm() {
             isValid={isValid}
             loading={loading}
           />
-          <button  type="submit" className="btn btn-green" disabled={!isValid}>
+          <button type="submit" className="btn btn-green" disabled={!isValid}>
             Choose
           </button>
           <h3>Debug State</h3>
