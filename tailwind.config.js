@@ -5,7 +5,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        PlusJakartaSans: ["Plus Jakarta Sans", "sans-serif"],
+      },
+    },
   },
-  plugins: [],
-}
+  plugins: [require("tailwind-scrollbar-hide")],
+};

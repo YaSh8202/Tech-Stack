@@ -7,7 +7,7 @@ import SidebarNav from "./SidebarNav";
 
 const Sidebar = () => {
   return (
-    <div className="bg-[#F5FAFC] h-full w-[25vw] flex-col flex   border-r px-5 ">
+    <div className="bg-[#F5FAFC] h-full w-[30vw] flex-col flex   border-r px-5 ">
       <SidebarNav />
       <SearchBar />
       <GroupList />

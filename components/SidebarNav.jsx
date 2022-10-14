@@ -9,7 +9,7 @@ const SidebarNav = () => {
   const { user } = useContext(UserContext);
   const router = useRouter();
   const loginHandler = (e) => {
-    router.push("./enter");
+    router.push("/enter");
   };
 
   return (
