@@ -15,7 +15,9 @@ const Group = ({ group }) => {
         selectedGroup?.name === name ? "bg-gray-100" : ""
       }  `}
     >
-      <GroupImage size={60} image={image} />
+      <div className="w-16 h-16 " >
+        <GroupImage size={60} image={image} />
+      </div>
       <div className="flex flex-1 h-full py-2 flex-col items-start justify-between px-2 ">
         <div className="flex flex-row w-full  items-center justify-between">
           <h3 className="text-lg flex-1 text-gray-800">{name}</h3>
@@ -24,7 +26,9 @@ const Group = ({ group }) => {
             datetime={`${new Date(updatedAt).toLocaleString()}`}
           />
         </div>
-        <p className="text-xs text-gray-500">{lastMessage.text}</p>
+        <p className="text-xs w-24 text-gray-500 truncate ">
+          {lastMessage.text}
+        </p>
       </div>
     </div>
   );
@@ -40,7 +44,7 @@ export function GroupImage({ image, size }) {
       width={size}
       height={size}
       alt=""
-      className="rounded-md h-full"
+      className={` w-[${size}px] h-[${size}px] rounded-md h-full  `}
     />
   );
 }

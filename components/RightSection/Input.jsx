@@ -4,7 +4,7 @@ import { BsEmojiLaughing, BsMarkdown } from "react-icons/bs";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { v4 as uuid } from "uuid";
 import { auth, firestore, storage } from "../../lib/firebase";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
   collection,
   doc,
@@ -22,15 +22,15 @@ const Input = () => {
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
-    console.log(emojiObject);
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    if (message.trim() === "" && !file) return;
+
     const messageId = uuid();
     const storageRef = ref(storage, messageId);
-    console.log(messageId);
     const messagesRef = doc(
       collection(
         doc(collection(firestore, "Groups"), selectedGroup?.id),
@@ -61,13 +61,14 @@ const Input = () => {
       });
     }
 
-    await updateDoc(doc(firestore, "Groups", selectedGroup.id), {
-      lastMessage: {
-        text: message,
-      },
-      updatedAt: serverTimestamp(),
-    });
-
+    if (message.trim() !== "") {
+      await updateDoc(doc(firestore, "Groups", selectedGroup?.id), {
+        lastMessage: {
+          text: message,
+        },
+        updatedAt: serverTimestamp(),
+      });
+    }
     setMessage("");
     setFile(null);
   };

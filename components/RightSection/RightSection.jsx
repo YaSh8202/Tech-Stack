@@ -9,8 +9,7 @@ const RightSection = () => {
   if(!selectedGroup) return null;
 
   return (
-    
-    <section className="flex flex-col w-full flex-1" >
+    <section className="flex flex-col flex-1 " >
       <Header />
       <ChatBox />
       <Input />
