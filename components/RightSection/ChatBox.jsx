@@ -13,14 +13,14 @@ import Message from "./Message";
 import { flushSync } from "react-dom";
 
 const ChatBox = () => {
-  const { selectedGroup } = useContext(GroupContext);
+  const { selectedGroup, openAIMessages } = useContext(GroupContext);
   const [messages, setMessages] = useState([]);
   useEffect(() => {
     if (!selectedGroup) return;
-    if (!selectedGroup || selectedGroup.id === "open-ai") {
-      setMessages([]);
+    if (selectedGroup.id === "open-ai") {
+      setMessages(openAIMessages);
       return;
-    };
+    }
 
     const getMessages = async () => {
       const messagesRef = collection(
@@ -33,17 +33,15 @@ const ChatBox = () => {
         snapshot.forEach(async (d) => {
           msgs.push(d.data());
         });
-        flushSync(() => {
-          setMessages(msgs);
-        });
-        var elem = document.getElementById("messages");
-        elem.scroll({ top: elem.scrollHeight, behavior: "smooth" });
+
+        setMessages(msgs);
       });
       return unsubscribe;
     };
     getMessages();
     // return () => unsubscribe();
-  }, [selectedGroup]);
+  }, [selectedGroup, openAIMessages]);
+  console.log("messages ", messages);
   return (
     <div
       id="messages"

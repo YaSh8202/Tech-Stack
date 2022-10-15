@@ -14,22 +14,47 @@ import {
 } from "firebase/firestore";
 import { GroupContext } from "../../lib/groupContext";
 import { UserContext } from "../../lib/userContext";
+import { getResponse } from "../../lib/openai";
 
 const Input = () => {
   const [showEmojis, setShowEmojis] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
-  const { selectedGroup } = useContext(GroupContext);
-  const {user} = useContext(UserContext);
+  const { selectedGroup, setOpenAIMessages, openAIMessages } =
+    useContext(GroupContext);
+  const { user } = useContext(UserContext);
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
   };
-
+  console.log(openAIMessages);
   const submitHandler = async (e) => {
     e.preventDefault();
 
     if (message.trim() === "" && !file) return;
+
+    if (selectedGroup.id === "open-ai") {
+      const response = await getResponse(message);
+      console.log("response", response.toString());
+      setOpenAIMessages((prev) => [
+        ...prev,
+        {
+          id: Math.random(),
+          text: message,
+          senderId: user.uid,
+          createdAt: new Date(),
+        },
+          {
+          id: Math.random(),
+          text: response,
+          senderId: "open-ai",
+          createdAt: new Date(),
+        },
+      ]);
+      setMessage("");
+
+      return;
+    }
 
     const messageId = uuid();
     const storageRef = ref(storage, messageId);
@@ -97,7 +122,7 @@ const Input = () => {
           disabled={!user}
         />
       </label>
-      <button disabled={!user} >
+      <button disabled={!user}>
         <BsMarkdown size={24} />
       </button>
       <form className="flex-1" onSubmit={submitHandler}>
@@ -106,10 +131,9 @@ const Input = () => {
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder={!user ? "Please Login...": "Say Something..."}
+          placeholder={!user ? "Please Login..." : "Say Something..."}
           className="h-12 w-full bg-white rounded-full  border outline-none mx-2 px-5 py-1 disabled:opacity-50 "
           disabled={!selectedGroup || !user}
-
         />
         {showEmojis && (
           <div className="absolute left-2 bottom-16 ">

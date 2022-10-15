@@ -4,11 +4,22 @@ import React, { useContext, useEffect, useState } from "react";
 import { firestore } from "../../lib/firebase";
 import { UserContext } from "../../lib/userContext";
 
+// function NewlineText(props) {
+//   const text = props.text;
+//   const newText = text.split("\n").map((str) => <p text-sm>{str}</p>);
+
+//   return newText;
+// }
+
 const Message = ({ message }) => {
   const [sender, setSender] = useState(null);
   const { username } = useContext(UserContext);
   const isSender = username === sender?.username;
   useEffect(() => {
+    if (message.senderId === "open-ai") {
+      return;
+    }
+
     const getSender = async () => {
       const senderRef = doc(collection(firestore, "users"), message.senderId);
       const senderDoc = await getDoc(senderRef);
@@ -37,7 +48,8 @@ const Message = ({ message }) => {
           {!isSender && (
             <p className="text-sm font-semibold">{sender?.username}</p>
           )}
-          <p className="text-sm">{message.text}</p>
+          <p className="text-sm whitespace-pre-wrap ">{message.text}</p>
+          {/* {NewlineText({ text: message.text })} */}
         </div>
       </div>
       {message.img && (

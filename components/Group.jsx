@@ -30,7 +30,7 @@ const Group = ({ group }) => {
         </div>
         {updatedAt && (
           <p className="text-xs w-24 text-gray-500 truncate ">
-            {lastMessage.text}
+            {lastMessage?.text}
           </p>
         )}
       </div>
