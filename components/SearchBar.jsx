@@ -1,7 +1,7 @@
 import React from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 
-const SearchBar = () => {
+const SearchBar = ({ search, setSearch }) => {
   return (
     <div className="rounded-full flex flex-row items-center border bg-white w-full h-12 px-3 py-2.5 mt-2 ">
       <label>
@@ -11,6 +11,8 @@ const SearchBar = () => {
         type="text"
         placeholder="Search"
         className="w-full h-full outline-none pl-2 placeholder:text-gray-500 text-700 "
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
     </div>
   );

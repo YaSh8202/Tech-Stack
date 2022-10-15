@@ -1,17 +1,14 @@
 import { GroupContextProvider } from "../lib/groupContext";
-import { useUserData } from "../lib/hooks/useUserData";
-import { UserContext } from "../lib/userContext";
+import { UserContextProvider } from "../lib/userContext";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
-  const userData = useUserData();
-
   return (
-    <UserContext.Provider value={userData}>
+    <UserContextProvider>
       <GroupContextProvider>
         <Component {...pageProps} />
       </GroupContextProvider>
-    </UserContext.Provider>
+    </UserContextProvider>
   );
 }
 

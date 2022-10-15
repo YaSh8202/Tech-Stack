@@ -1,36 +1,38 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../lib/userContext";
 import ProfileAvatar from "./ProfileAvatar";
 import { FaUserCircle } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { FiChevronDown } from "react-icons/fi";
+import LoginModal from "./Modals/LoginModal";
 
 const SidebarNav = () => {
   const { user } = useContext(UserContext);
-  const router = useRouter();
-  const loginHandler = (e) => {
-    router.push("/enter");
-  };
 
   return (
-    <nav className="  w-full px-3 py-2 h-16">
-      <ul className="flex-row h-full flex items-center justify-between">
-        <li>
+    <div className="  w-full px-3 py-2 h-16">
+      <div className="flex-row h-full flex items-center justify-between">
+        <div>
           {user ? (
-            <ProfileAvatar profilePic={user?.photoURL} size={40} />
+            <LoginModal>
+              <ProfileAvatar profilePic={user?.photoURL} size={40} />
+            </LoginModal>
           ) : (
-            <button onClick={loginHandler}>
-              <FaUserCircle className="text-gray-600 bg-gray-200" size={40} />
-            </button>
+            <LoginModal>
+              <FaUserCircle
+                className="text-gray-600 bg-transparent"
+                size={40}
+              />
+            </LoginModal>
           )}
-        </li>
-        <li>
+        </div>
+        <div>
           <button>
             <FiChevronDown className="text-gray-600" size={28} />
           </button>
-        </li>
-      </ul>
-    </nav>
+        </div>
+      </div>
+    </div>
   );
 };
 

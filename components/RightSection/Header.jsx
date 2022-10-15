@@ -7,7 +7,7 @@ import { FiChevronDown } from "react-icons/fi";
 const Header = () => {
   const { selectedGroup } = useContext(GroupContext);
   return (
-    <div className="w-full flex flex-row justify-between p-4 bg-[#F7F7FC] h-[70px]  ">
+    <div className="w-full flex flex-row justify-between py-4 px-6 bg-[#F7F7FC] h-[70px]  ">
       <div className="flex flex-1 flex-row items-center">
         <GroupImage size={50} image={selectedGroup?.image} />
         <h2 className="ml-4 text-lg text-gray-700 font-semibold">

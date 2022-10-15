@@ -10,12 +10,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { firestore } from "../../lib/firebase";
 import { GroupContext } from "../../lib/groupContext";
 import Message from "./Message";
+import { flushSync } from "react-dom";
 
 const ChatBox = () => {
   const { selectedGroup } = useContext(GroupContext);
   const [messages, setMessages] = useState([]);
   useEffect(() => {
     if (!selectedGroup) return;
+    if (!selectedGroup || selectedGroup.id === "open-ai") {
+      setMessages([]);
+      return;
+    };
 
     const getMessages = async () => {
       const messagesRef = collection(
@@ -28,7 +33,11 @@ const ChatBox = () => {
         snapshot.forEach(async (d) => {
           msgs.push(d.data());
         });
-        setMessages(msgs);
+        flushSync(() => {
+          setMessages(msgs);
+        });
+        var elem = document.getElementById("messages");
+        elem.scroll({ top: elem.scrollHeight, behavior: "smooth" });
       });
       return unsubscribe;
     };
@@ -36,7 +45,10 @@ const ChatBox = () => {
     // return () => unsubscribe();
   }, [selectedGroup]);
   return (
-    <div className="flex flex-col flex-1 w-full px-8 overflow-auto overflow-y-scroll scrollbar-hide  ">
+    <div
+      id="messages"
+      className="flex flex-col flex-1 w-full px-6  overflow-auto overflow-y-scroll scrollbar-hide  "
+    >
       {messages.map((message) => (
         <Message key={message.id} message={message} />
       ))}

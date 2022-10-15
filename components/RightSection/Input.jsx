@@ -13,12 +13,14 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { GroupContext } from "../../lib/groupContext";
+import { UserContext } from "../../lib/userContext";
 
 const Input = () => {
   const [showEmojis, setShowEmojis] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const { selectedGroup } = useContext(GroupContext);
+  const {user} = useContext(UserContext);
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
@@ -75,7 +77,7 @@ const Input = () => {
 
   return (
     <div className="relative flex flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
-      <button onClick={() => setShowEmojis((prev) => !prev)}>
+      <button disabled={!user} onClick={() => setShowEmojis((prev) => !prev)}>
         {showEmojis ? (
           <AiOutlineCloseCircle size={24} />
         ) : (
@@ -92,9 +94,10 @@ const Input = () => {
           className="hidden"
           type="file"
           name="file"
+          disabled={!user}
         />
       </label>
-      <button>
+      <button disabled={!user} >
         <BsMarkdown size={24} />
       </button>
       <form className="flex-1" onSubmit={submitHandler}>
@@ -103,8 +106,10 @@ const Input = () => {
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Say Something..."
-          className="h-12 w-full bg-white rounded-full  border outline-none mx-2 px-5 py-1"
+          placeholder={!user ? "Please Login...": "Say Something..."}
+          className="h-12 w-full bg-white rounded-full  border outline-none mx-2 px-5 py-1 disabled:opacity-50 "
+          disabled={!selectedGroup || !user}
+
         />
         {showEmojis && (
           <div className="absolute left-2 bottom-16 ">

@@ -15,20 +15,24 @@ const Group = ({ group }) => {
         selectedGroup?.name === name ? "bg-gray-100" : ""
       }  `}
     >
-      <div className="w-16 h-16 " >
+      <div className="w-16 h-16 ">
         <GroupImage size={60} image={image} />
       </div>
       <div className="flex flex-1 h-full py-2 flex-col items-start justify-between px-2 ">
         <div className="flex flex-row w-full  items-center justify-between">
           <h3 className="text-lg flex-1 text-gray-800">{name}</h3>
-          <TimeAgo
-            className="text-xs text-gray-400"
-            datetime={`${new Date(updatedAt).toLocaleString()}`}
-          />
+          {updatedAt && (
+            <TimeAgo
+              className="text-xs text-gray-400"
+              datetime={`${new Date(updatedAt).toLocaleString()}`}
+            />
+          )}
         </div>
-        <p className="text-xs w-24 text-gray-500 truncate ">
-          {lastMessage.text}
-        </p>
+        {updatedAt && (
+          <p className="text-xs w-24 text-gray-500 truncate ">
+            {lastMessage.text}
+          </p>
+        )}
       </div>
     </div>
   );
