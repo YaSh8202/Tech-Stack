@@ -16,7 +16,7 @@ const GroupList = ({ keyword }) => {
         }),
       ]);
     }
-  }, [keyword, groups]);
+  }, [keyword, groups, filteredGroups]);
 
   if (!groups) return null;
 

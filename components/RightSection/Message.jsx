@@ -4,13 +4,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { firestore } from "../../lib/firebase";
 import { UserContext } from "../../lib/userContext";
 
-// function NewlineText(props) {
-//   const text = props.text;
-//   const newText = text.split("\n").map((str) => <p text-sm>{str}</p>);
-
-//   return newText;
-// }
-
 const Message = ({ message }) => {
   const [sender, setSender] = useState(null);
   const { username } = useContext(UserContext);
@@ -26,14 +19,17 @@ const Message = ({ message }) => {
       setSender(senderDoc.data());
     };
     getSender();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (message.isMarkdown === true) return;
 
   return (
     <div
       key={message.id}
       className={`flex flex-col gap-2   ${
         isSender ? "ml-auto bg-[#D7F8F4] " : "mr-auto bg-white "
-      } my-2 px-4 py-2 rounded-md `}
+      } my-2 px-3 py-2 rounded-md `}
     >
       <div className="flex flex-row gap-2 items-center">
         {/* <Image
@@ -53,7 +49,15 @@ const Message = ({ message }) => {
         </div>
       </div>
       {message.img && (
-        <img src={message.img} alt="message" className="w-64 h-64 rounded-md" />
+        <div className="relative w-80 h-64 ">
+          <Image
+            layout="fill"
+            src={message.img}
+            alt="message"
+            className="rounded-md"
+            objectFit="cover"
+          />
+        </div>
       )}
     </div>
   );

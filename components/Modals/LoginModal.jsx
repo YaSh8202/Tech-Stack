@@ -76,6 +76,8 @@ function UsernameForm() {
 
   useEffect(() => {
     checkUsername(formValue);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValue]);
 
   const onChange = (e) => {
@@ -100,6 +102,7 @@ function UsernameForm() {
   // hit the database for username match after each debounced change
   //  useCallback is required for debounce to work
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkUsername = useCallback(
     debounce(async (username) => {
       if (username.length >= 3) {

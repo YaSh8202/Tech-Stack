@@ -15,6 +15,7 @@ import {
 import { GroupContext } from "../../lib/groupContext";
 import { UserContext } from "../../lib/userContext";
 import { getResponse } from "../../lib/openai";
+import MarkdownModal from "../Modals/MarkdownModal";
 
 const Input = () => {
   const [showEmojis, setShowEmojis] = useState(false);
@@ -29,7 +30,7 @@ const Input = () => {
   };
   const submitHandler = async (e) => {
     e.preventDefault();
-
+    setMessage("");
     if (message.trim() === "" && !file) return;
 
     try {
@@ -99,12 +100,12 @@ const Input = () => {
     } catch (err) {
       console.log(err);
     }
-    setMessage("");
+    
     setFile(null);
   };
 
   return (
-    <div className="relative flex flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
+    <div className=" flex flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
       <button disabled={!user || selectedGroup.id==='open-ai' } onClick={() => setShowEmojis((prev) => !prev)}>
         {showEmojis ? (
           <AiOutlineCloseCircle size={24} />
@@ -125,10 +126,10 @@ const Input = () => {
           disabled={!user || selectedGroup.id==='open-ai'}
         />
       </label>
-      <button disabled={!user || selectedGroup.id==='open-ai'}>
+      <MarkdownModal disabled={!user || selectedGroup.id==='open-ai'}>
         <BsMarkdown size={24} />
-      </button>
-      <form className="flex-1" onSubmit={submitHandler}>
+      </MarkdownModal>
+      <form className="flex-1 relative " onSubmit={submitHandler}>
         <input
           id="message"
           type="text"
