@@ -7,7 +7,7 @@ import {
   query,
 } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
-import { firestore } from "../../lib/firebase";
+import { firestore, postToJSON } from "../../lib/firebase";
 import { GroupContext } from "../../lib/groupContext";
 import Message from "./Message";
 import ScrollableFeed from "react-scrollable-feed";
@@ -31,7 +31,7 @@ const ChatBox = () => {
       const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
         const msgs = [];
         snapshot.forEach(async (d) => {
-          msgs.push(d.data());
+          msgs.push(postToJSON(d));
         });
 
         setMessages(msgs);

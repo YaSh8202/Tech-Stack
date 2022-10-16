@@ -14,6 +14,24 @@ const Message = ({ message }) => {
   const [sender, setSender] = useState(null);
   const { username } = useContext(UserContext);
   const isSender = username === sender?.username;
+  let createdAt = null;
+  try {
+    createdAt =
+      typeof message?.createdAt === "number"
+        ? new Date(message?.createdAt)?.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })
+        : message.createdAt?.toDate()?.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          });
+  } catch (err) {
+    console.log(err);
+  }
+
   useEffect(() => {
     if (message.senderId === "open-ai") {
       return;
@@ -29,20 +47,16 @@ const Message = ({ message }) => {
   }, []);
 
   function renderHTML(text) {
-    // Using markdown-it
     return mdParser.render(text);
-    // Using react-markdown
-    // return React.createElement(ReactMarkdown, {
-    //   source: text,
-    // });
   }
-
   return (
     <div
       key={message.id}
       className={`flex flex-col gap-2   ${
         isSender ? "ml-auto bg-[#D7F8F4] " : "mr-auto bg-white "
-      } my-2 px-3 py-2 rounded-md `}
+      } my-2 min-w-[5rem] relative  rounded-md ${
+        message.isMarkdown ? "" : "px-3 pt-1 pb-2.5 "
+      } `}
     >
       {message.isMarkdown === true ? (
         <MdEditor
@@ -51,7 +65,7 @@ const Message = ({ message }) => {
           renderHTML={renderHTML}
         />
       ) : (
-        <div className="flex flex-row gap-2 items-center">
+        <div className="flex flex-row gap-2 items-center ">
           {/* <Image
           src={sender?.photoURL}
           alt="sender"
@@ -60,7 +74,7 @@ const Message = ({ message }) => {
           width={40}
           height={40}
         /> */}
-          <div className="flex flex-col">
+          <div className="flex flex-col ">
             {!isSender && (
               <p className="text-sm font-semibold">{sender?.username}</p>
             )}
@@ -79,6 +93,12 @@ const Message = ({ message }) => {
             </div>
           )}
         </div>
+      )}
+
+      {createdAt && (
+        <span className="absolute bottom-[2px] right-[2px] text-xs text-gray-500 whitespace-nowrap ">
+          {createdAt}
+        </span>
       )}
     </div>
   );

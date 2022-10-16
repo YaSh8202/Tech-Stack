@@ -16,6 +16,7 @@ import { GroupContext } from "../../lib/groupContext";
 import { UserContext } from "../../lib/userContext";
 import { getResponse } from "../../lib/openai";
 import MarkdownModal from "../Modals/MarkdownModal";
+import { toast } from "react-hot-toast";
 
 const Input = () => {
   const [showEmojis, setShowEmojis] = useState(false);
@@ -35,6 +36,9 @@ const Input = () => {
 
     try {
       if (selectedGroup.id === "open-ai") {
+
+        const toastId =  toast.loading("Thinking...");
+
         const response = await getResponse(message);
 
         setOpenAIMessages((prev) => [
@@ -52,11 +56,13 @@ const Input = () => {
             createdAt: new Date(),
           },
         ]);
+        toast.success("Done!", { id: toastId });
         setMessage("");
 
         return;
       }
-
+      
+      const toastId = toast.loading("Sending message...");
       const messageId = uuid();
       const storageRef = ref(storage, messageId);
       const messagesRef = doc(
@@ -97,6 +103,7 @@ const Input = () => {
           updatedAt: serverTimestamp(),
         });
       }
+      toast.success("Message sent!", { id: toastId });
     } catch (err) {
       console.log(err);
     }

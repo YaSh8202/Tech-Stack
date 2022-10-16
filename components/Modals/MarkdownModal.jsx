@@ -8,8 +8,25 @@ import { IoClose } from "react-icons/io5";
 import { GroupContext } from "../../lib/groupContext";
 import { AiOutlineSend } from "react-icons/ai";
 import { v4 as uuid } from "uuid";
-import { collection, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, firestore } from "../../lib/firebase";
+import { toast } from "react-hot-toast";
+
+function onImageUpload(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (data) => {
+      resolve(data.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 const MarkdownModal = ({ children }) => {
@@ -23,6 +40,7 @@ const MarkdownModal = ({ children }) => {
   async function handleSendMarkdown(event) {
     event.preventDefault();
     setShowModal(false);
+    const toastId = toast.loading("Sending message...");
     try {
       const messageId = uuid();
       const messagesRef = doc(
@@ -49,6 +67,9 @@ const MarkdownModal = ({ children }) => {
       console.log(err);
     }
     setMarkdown("");
+    toast.success("Message Sent", {
+      id: toastId,
+    });
   }
 
   if (!showModal) {
@@ -93,6 +114,7 @@ const MarkdownModal = ({ children }) => {
               syncScrollMode={["leftFollowRight", "rightFollowLeft"]}
               value={markdown}
               shortcuts={true}
+              onImageUpload={onImageUpload}
             />
           </div>
         </div>
