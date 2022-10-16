@@ -40,8 +40,8 @@ const SidebarNav = () => {
           >
             <SiOpenai
               className={` ${
-                selectedGroup.id === "open-ai" ? "text-red-500" : ""
-              } text-gray-600 bg-transparent  group-hover:text-red-400 group-hover:scale-105  `}
+                selectedGroup?.id === "open-ai" ? "text-red-400" : ""
+              } text-gray-600 bg-transparent  group-hover:text-red-500 group-hover:scale-105  `}
               size={28}
             />
           </button>
