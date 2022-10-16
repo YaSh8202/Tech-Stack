@@ -46,7 +46,7 @@ const ChatBox = () => {
       id="messages"
       className="flex flex-col flex-1 w-full px-6  overflow-auto overflow-y-scroll scrollbar-hide  "
     >
-      {messages.map((message) => (
+      {messages && messages?.map((message) => (
         <Message key={message.id} message={message} />
       ))}
     </ScrollableFeed>
