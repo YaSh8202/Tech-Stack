@@ -24,7 +24,6 @@ const LoginModal = ({ children }) => {
     <>
       <div
         onClick={() => {
-          console.log("clicked");
           setShowModal((prev) => !prev);
         }}
         className={` ${

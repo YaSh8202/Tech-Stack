@@ -10,7 +10,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { firestore } from "../../lib/firebase";
 import { GroupContext } from "../../lib/groupContext";
 import Message from "./Message";
-import { flushSync } from "react-dom";
+import ScrollableFeed from "react-scrollable-feed";
 
 const ChatBox = () => {
   const { selectedGroup, openAIMessages } = useContext(GroupContext);
@@ -41,16 +41,15 @@ const ChatBox = () => {
     getMessages();
     // return () => unsubscribe();
   }, [selectedGroup, openAIMessages]);
-  console.log("messages ", messages);
   return (
-    <div
+    <ScrollableFeed
       id="messages"
       className="flex flex-col flex-1 w-full px-6  overflow-auto overflow-y-scroll scrollbar-hide  "
     >
       {messages.map((message) => (
         <Message key={message.id} message={message} />
       ))}
-    </div>
+    </ScrollableFeed>
   );
 };
 

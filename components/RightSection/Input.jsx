@@ -27,74 +27,77 @@ const Input = () => {
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
   };
-  console.log(openAIMessages);
   const submitHandler = async (e) => {
     e.preventDefault();
 
     if (message.trim() === "" && !file) return;
 
-    if (selectedGroup.id === "open-ai") {
-      const response = await getResponse(message);
-      console.log("response", response.toString());
-      setOpenAIMessages((prev) => [
-        ...prev,
-        {
-          id: Math.random(),
-          text: message,
-          senderId: user.uid,
-          createdAt: new Date(),
-        },
+    try {
+      if (selectedGroup.id === "open-ai") {
+        const response = await getResponse(message);
+
+        setOpenAIMessages((prev) => [
+          ...prev,
           {
-          id: Math.random(),
-          text: response,
-          senderId: "open-ai",
-          createdAt: new Date(),
-        },
-      ]);
-      setMessage("");
-
-      return;
-    }
-
-    const messageId = uuid();
-    const storageRef = ref(storage, messageId);
-    const messagesRef = doc(
-      collection(
-        doc(collection(firestore, "Groups"), selectedGroup?.id),
-        "messages"
-      ),
-      messageId
-    );
-    if (file) {
-      uploadBytesResumable(storageRef, file).then(() => {
-        getDownloadURL(storageRef).then(async (downloadURL) => {
-          await setDoc(messagesRef, {
-            id: messageId,
+            id: Math.random(),
             text: message,
-            createdAt: serverTimestamp(),
-            senderId: auth.currentUser.uid,
-            img: downloadURL,
-            isMarkdown: false,
+            senderId: user.uid,
+            createdAt: new Date(),
+          },
+          {
+            id: Math.random(),
+            text: response,
+            senderId: "open-ai",
+            createdAt: new Date(),
+          },
+        ]);
+        setMessage("");
+
+        return;
+      }
+
+      const messageId = uuid();
+      const storageRef = ref(storage, messageId);
+      const messagesRef = doc(
+        collection(
+          doc(collection(firestore, "Groups"), selectedGroup?.id),
+          "messages"
+        ),
+        messageId
+      );
+      if (file) {
+        uploadBytesResumable(storageRef, file).then(() => {
+          getDownloadURL(storageRef).then(async (downloadURL) => {
+            await setDoc(messagesRef, {
+              id: messageId,
+              text: message,
+              createdAt: serverTimestamp(),
+              senderId: auth.currentUser.uid,
+              img: downloadURL,
+              isMarkdown: false,
+            });
           });
         });
-      });
-    } else {
-      await setDoc(messagesRef, {
-        id: messageId,
-        text: message,
-        createdAt: serverTimestamp(),
-        senderId: auth.currentUser.uid,
-        isMarkdown: false,
-      });
-    }
-
-    if (message.trim() !== "") {
-      await updateDoc(doc(firestore, "Groups", selectedGroup?.id), {
-        lastMessage: {
+      } else {
+        await setDoc(messagesRef, {
+          id: messageId,
           text: message,
-        },
-        updatedAt: serverTimestamp(),
-      });
+          createdAt: serverTimestamp(),
+          senderId: auth.currentUser.uid,
+          isMarkdown: false,
+        });
+      }
+
+      if (message.trim() !== "") {
+        await updateDoc(doc(firestore, "Groups", selectedGroup?.id), {
+          lastMessage: {
+            text: message,
+          },
+          updatedAt: serverTimestamp(),
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
     setMessage("");
     setFile(null);
@@ -102,7 +105,7 @@ const Input = () => {
 
   return (
     <div className="relative flex flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
-      <button disabled={!user} onClick={() => setShowEmojis((prev) => !prev)}>
+      <button disabled={!user || selectedGroup.id==='open-ai' } onClick={() => setShowEmojis((prev) => !prev)}>
         {showEmojis ? (
           <AiOutlineCloseCircle size={24} />
         ) : (
@@ -119,10 +122,10 @@ const Input = () => {
           className="hidden"
           type="file"
           name="file"
-          disabled={!user}
+          disabled={!user || selectedGroup.id==='open-ai'}
         />
       </label>
-      <button disabled={!user}>
+      <button disabled={!user || selectedGroup.id==='open-ai'}>
         <BsMarkdown size={24} />
       </button>
       <form className="flex-1" onSubmit={submitHandler}>

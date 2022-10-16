@@ -10,20 +10,18 @@ const GroupList = ({ keyword }) => {
     if (!keyword || keyword === "") {
       setFilteredGroups(groups);
     } else {
-      setFilteredGroups(
-        groups.filter((group) =>
-          group.name.toLowerCase().includes(keyword.toLowerCase())
-        )
-      );
+      setFilteredGroups([
+        ...filteredGroups.filter((group) => {
+          return group.name.toLowerCase().includes(keyword.toLowerCase());
+        }),
+      ]);
     }
-
-    return () => {};
   }, [keyword, groups]);
 
   if (!groups) return null;
 
   return (
-    <div className="w-full flex-1 my-4 flex flex-col gap-2 overflow-y-scroll scrollbar-hide ">
+    <div className="w-full flex-1 mt-3 flex flex-col gap-2 overflow-y-scroll scrollbar-hide ">
       <Group
         key="open-ai"
         group={{ id: "open-ai", name: "Ask a Question", image: "/openAI.png" }}

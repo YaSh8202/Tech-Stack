@@ -18,7 +18,7 @@ const Group = ({ group }) => {
       <div className="w-16 h-16 ">
         <GroupImage size={60} image={image} />
       </div>
-      <div className="flex flex-1 h-full py-2 flex-col items-start justify-between px-2 ">
+      <div className="flex flex-1 h-full py-2 flex-col items-start justify-center px-2 ">
         <div className="flex flex-row w-full  items-center justify-between">
           <h3 className="text-lg flex-1 text-gray-800">{name}</h3>
           {updatedAt && (
