@@ -8,32 +8,25 @@ import debounce from "lodash.debounce";
 import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
 import { firestore } from "../../lib/firebase";
 
-const LoginModal = ({ children }) => {
-  const [showModal, setShowModal] = React.useState(false);
-  const { user, username } = useContext(UserContext);
+const LoginModal = () => {
+  const { user, username, userModal, setUserModal } = useContext(UserContext);
 
-  if (!showModal) {
-    return (
-      <button onClick={() => setShowModal(true)} className="bg-transparent">
-        {children}
-      </button>
-    );
-  }
+  if (!userModal) return null;
 
   return (
-    <>
+    <div className="absolute inset-0">
       <div
         onClick={() => {
-          setShowModal((prev) => !prev);
+          setUserModal(false);
         }}
         className={` ${
-          showModal ? "" : "hidden"
+          userModal ? "" : "hidden"
         } fixed z-10  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
       ></div>
-      <div className="absolute inset-0 z-10 ">
+      <div className="absolute left-[50%] top-20 translate-x-[-50%] z-20">
         <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
           <button
-            onClick={() => setShowModal(false)}
+            onClick={() => setUserModal(false)}
             className="absolute right-8 top-8 hover:bg-gray-50 rounded-full "
           >
             <IoClose className="text-xl text-gray-700 " />
@@ -56,7 +49,7 @@ const LoginModal = ({ children }) => {
               ) : (
                 <GoogleButton
                   closeModal={() => {
-                    setShowModal(false);
+                    setUserModal(false);
                   }}
                 />
               )}
@@ -64,7 +57,7 @@ const LoginModal = ({ children }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -9,7 +9,28 @@ module.exports = {
       fontFamily: {
         PlusJakartaSans: ["Plus Jakarta Sans", "sans-serif"],
       },
+      tooltipArrows: (theme) => ({
+        "message-sender-arrow": {
+          borderColor: "#e5e7eb",
+          borderWidth: 1,
+          backgroundColor: "#D7F8F4",
+          size: 7,
+          offset: 2,
+        },
+        "message-arrow": {
+          borderColor: theme("colors.gray.100"),
+          borderWidth: 1,
+          backgroundColor: "#fff",
+          size: 10,
+          offset: 2,
+          borderColor:"#e5e7eb"
+        },
+        
+      }),
     },
   },
-  plugins: [require("tailwind-scrollbar-hide")],
+  plugins: [
+    require("tailwind-scrollbar-hide"),
+    require("tailwindcss-tooltip-arrow-after")(),
+  ],
 };
