@@ -1,4 +1,3 @@
-import RightSection from "../components/RightSection/RightSection";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import LoginModal from "../components/Modals/LoginModal";

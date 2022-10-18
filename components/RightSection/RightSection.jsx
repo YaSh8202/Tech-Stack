@@ -10,7 +10,7 @@ const RightSection = () => {
   if (!selectedGroup) return null;
 
   return (
-    <section className="flex flex-col flex-1 ">
+    <section className="md:flex flex-col flex-1 ">
       <Header />
       <ChatBox />
       <Input />

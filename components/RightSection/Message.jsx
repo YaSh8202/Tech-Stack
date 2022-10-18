@@ -37,7 +37,7 @@ const Message = ({ message }) => {
   console.log(sender);
 
   useEffect(() => {
-    if (message.senderId === "open-ai") {
+    if (message?.senderId === "open-ai") {
       return;
     }
 
@@ -53,6 +53,11 @@ const Message = ({ message }) => {
   function renderHTML(text) {
     return mdParser.render(text);
   }
+
+  if(!message) {
+    return null;
+  }
+
   return (
     <div
       id={message.id}

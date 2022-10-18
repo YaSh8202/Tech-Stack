@@ -25,7 +25,7 @@ const SidebarNav = () => {
                 setUserModal(true);
               }}
             >
-              <ProfileAvatar profilePic={user?.photoURL} size={40} />
+              <ProfileAvatar profilePic={user.photoURL} size={40} />
             </button>
           ) : (
             <button

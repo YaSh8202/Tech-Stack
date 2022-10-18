@@ -3,7 +3,6 @@ import { CgStack } from "react-icons/cg";
 import GoogleButton from "./GoogleButton";
 import { IoClose } from "react-icons/io5";
 import { UserContext } from "../../lib/userContext";
-import { useRouter } from "next/router";
 import debounce from "lodash.debounce";
 import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
 import { auth, firestore } from "../../lib/firebase";
@@ -53,41 +52,49 @@ const LoginModal = () => {
         } fixed z-10  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
       ></div>
       <div className="absolute left-[50%] top-20 translate-x-[-50%] z-20">
-        <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-          <button
-            onClick={() => setUserModal(false)}
-            className="absolute right-8 top-8 hover:bg-gray-50 rounded-full "
-          >
-            <IoClose className="text-xl text-gray-700 " />
-          </button>
-          <div className="mt-3 text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
-              {/* TEch Stack Icon */}
-              <CgStack />
+        {user ? (
+          <ProfileComponent username={username} user={user} />
+        ) : (
+          <>
+            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+              <button
+                onClick={() => setUserModal(false)}
+                className="absolute right-8 top-8 hover:bg-gray-50 rounded-full "
+              >
+                <IoClose className="text-xl text-gray-700 " />
+              </button>
+              <div className="mt-3 text-center">
+                <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+                  {/* TEch Stack Icon */}
+                  <CgStack />
+                </div>
+                <h3 className="font-bold text-xl leading-6 mt-2  text-blue-600">
+                  Tech Stack
+                </h3>
+                <div className="items-center my-3 px-4 py-3">
+                  {user ? (
+                    username ? (
+                      <>show profile</>
+                    ) : (
+                      <UsernameForm />
+                    )
+                  ) : (
+                    <>
+                      <GoogleButton
+                        closeModal={() => {
+                          setUserModal(false);
+                        }}
+                      />
+                      <GithubOAuthButton onClick={signInWithGithub}>
+                        Login with Github
+                      </GithubOAuthButton>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
-            <h3 className="font-bold text-xl leading-6 mt-2  text-blue-600">
-              Tech Stack
-            </h3>
-            <div className="items-center my-3 px-4 py-3">
-              {user ? (
-                username ? (
-                  <>show profile</>
-                ) : (
-                  <UsernameForm />
-                )
-              ) : (
-                <>
-                  <GoogleButton
-                    closeModal={() => {
-                      setUserModal(false);
-                    }}
-                  />
-                  <GithubOAuthButton onClick={signInWithGithub}>Login with Github</GithubOAuthButton>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -230,3 +237,39 @@ const GithubOAuthButton = ({ onClick }) => (
     <p className="text-white text-lg font-medium">Signin with Github</p>
   </button>
 );
+
+export const ProfileComponent = ({ user, username }) => {
+  return (
+    <>
+      {/* <div className="bg-gray-200 font-sans h-screen w-full flex flex-row justify-center items-center"> */}
+      <div className="card relative top-32 p-5 py-8   w-96 mx-auto bg-white  shadow-xl hover:shadow">
+        <img
+          className="w-32 mx-auto rounded-full -mt-20 border-8 border-white"
+          src={user.photoURL}
+          alt=""
+        />
+        <div className="text-center mt-2 text-3xl font-medium">
+          {user?.displayName}
+        </div>
+        <div className="text-center mt-2 font-light text-sm">@{username}</div>
+        {/* <div className="text-center font-normal text-lg">Kerala</div> */}
+        <div className="px-6 text-center mt-2 font-light text-sm">
+          <p>
+            Front end Developer, avid reader. Love to take a long walk, swim
+          </p>
+        </div>
+        {/* <hr className="mt-8" /> */}
+        {/* <div className="flex p-4">
+          <div className="w-1/2 text-center">
+            <span className="font-bold">1.8 k</span> Followers
+          </div>
+          <div className="w-0 border border-gray-300"></div>
+          <div className="w-1/2 text-center">
+            <span className="font-bold">2.0 k</span> Following
+          </div>
+        </div> */}
+      </div>
+      {/* </div> */}
+    </>
+  );
+};

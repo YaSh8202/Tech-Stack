@@ -32,7 +32,7 @@ const Input = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setMessage("");
-    if (message.trim() === "" && !file) return;
+    if ((message.trim() === "" && !file) || !selectedGroup) return;
 
     try {
       if (selectedGroup.id === "open-ai") {
@@ -148,7 +148,7 @@ const Input = () => {
           disabled={!selectedGroup || !user}
         />
         {showEmojis && (
-          <div className="absolute left-2 bottom-16 ">
+          <div className="absolute left-[-8rem] bottom-16 ">
             <EmojiPicker onEmojiClick={emojiClickHandler} />
           </div>
         )}

@@ -18,14 +18,12 @@ module.exports = {
           offset: 2,
         },
         "message-arrow": {
-          borderColor: theme("colors.gray.100"),
           borderWidth: 1,
           backgroundColor: "#fff",
           size: 10,
           offset: 2,
-          borderColor:"#e5e7eb"
+          borderColor: "#e5e7eb",
         },
-        
       }),
     },
   },
