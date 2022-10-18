@@ -6,10 +6,39 @@ import { UserContext } from "../../lib/userContext";
 import { useRouter } from "next/router";
 import debounce from "lodash.debounce";
 import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
-import { firestore } from "../../lib/firebase";
+import { auth, firestore } from "../../lib/firebase";
+import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
+import { BsGithub } from "react-icons/bs";
 
 const LoginModal = () => {
   const { user, username, userModal, setUserModal } = useContext(UserContext);
+  console.log(user);
+  const signInWithGithub = async () => {
+    const provider = new GithubAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user, result, token);
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GithubAuthProvider.credentialFromError(error);
+        // ...
+
+        console.log(errorCode, errorMessage, email, credential);
+      });
+  };
 
   if (!userModal) return null;
 
@@ -47,11 +76,14 @@ const LoginModal = () => {
                   <UsernameForm />
                 )
               ) : (
-                <GoogleButton
-                  closeModal={() => {
-                    setUserModal(false);
-                  }}
-                />
+                <>
+                  <GoogleButton
+                    closeModal={() => {
+                      setUserModal(false);
+                    }}
+                  />
+                  <GithubOAuthButton onClick={signInWithGithub}>Login with Github</GithubOAuthButton>
+                </>
               )}
             </div>
           </div>
@@ -188,3 +220,13 @@ function UsernameMessage({ username, isValid, loading }) {
 }
 
 export default LoginModal;
+
+const GithubOAuthButton = ({ onClick }) => (
+  <button
+    className="bg-[#333333] w-full hover:opacity-90 duration-150 items-center flex flex-row justify-center gap-3 h-12 mt-3 "
+    onClick={onClick}
+  >
+    <BsGithub className="w-8 h-8 text-white" />
+    <p className="text-white text-lg font-medium">Signin with Github</p>
+  </button>
+);

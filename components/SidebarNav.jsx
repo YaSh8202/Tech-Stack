@@ -8,6 +8,7 @@ import { SiOpenai } from "react-icons/si";
 import { GroupContext } from "../lib/groupContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
+import { BsGithub } from "react-icons/bs";
 
 const SidebarNav = () => {
   const { user, username, setUserModal } = useContext(UserContext);
@@ -74,6 +75,7 @@ const SidebarNav = () => {
                   signOut(auth);
                   setShowMenu(false);
                 } else {
+                  setUserModal(true);
                 }
               }}
               className=""
@@ -88,3 +90,4 @@ const SidebarNav = () => {
 };
 
 export default SidebarNav;
+

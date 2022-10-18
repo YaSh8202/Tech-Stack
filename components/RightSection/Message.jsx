@@ -9,6 +9,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
 import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
+import styles from "../styles.module.css";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 const Message = ({ message }) => {
@@ -54,6 +55,7 @@ const Message = ({ message }) => {
   }
   return (
     <div
+      id={message.id}
       className={` border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[10rem] ${
         isSender
           ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
@@ -80,7 +82,7 @@ const Message = ({ message }) => {
               </div>
             </div>
           )}
-          className=" text-[#020e0c] font-medium hover:underline "
+          className=" text-[#0c453e] text-xs underline cursor-pointer  hover:font-semibold font-medium  "
         >
           {sender?.username}
         </div>
@@ -114,76 +116,15 @@ const Message = ({ message }) => {
         )}
       </div>
       <ReactTooltip
-        backgroundColor="#f4fdfc"
         padding="0 0"
         place="top"
         type="light"
         effect="solid"
+        borderColor="#e5e7eb"
+        border
       />
     </div>
   );
 };
 
 export default Message;
-
-/*
-
-(
-    <div
-      key={message.id}
-      className={`flex flex-col gap-2   ${
-        isSender
-          ? "mr-1 ml-auto message-sender-arrow-right rounded-tl-none bg-[#D7F8F4] "
-          : "mr-auto bg-white message-arrow-left ml-1 rounded-tr-none "
-      } my-2 min-w-[5rem] relative  rounded-md  ${
-        message.isMarkdown ? "p-1" : "px-3 pt-1 pb-2.5 "
-      } `}
-    >
-      {message.isMarkdown === true ? (
-        <MdEditor
-          value={message.text}
-          view={{ menu: false, md: false, html: true }}
-          renderHTML={renderHTML}
-        />
-      ) : (
-        <div className="flex flex-row gap-2 items-center ">
-           <Image
-          src={sender?.photoURL}
-          alt="sender"
-          className="w-10 h-10 rounded-full"
-          layout="intrinsic"
-          width={40}
-          height={40}
-        /> 
-        <div className="flex flex-col ">
-        {!isSender && (
-          <p className="text-sm font-semibold">{sender?.username}</p>
-        )}
-        <p className="text-sm whitespace-pre-wrap ">{message.text}</p>
-        {/* {NewlineText({ text: message.text })}
-      </div>
-      {message.img && (
-        <div className="relative w-80 h-64 ">
-          <Image
-            layout="fill"
-            src={message.img}
-            alt="message"
-            className="rounded-md"
-            objectFit="cover"
-          />
-        </div>
-      )}
-    </div>
-  )}
-
-  {createdAt && (
-    <span className="absolute bottom-[2px] right-[2px] text-xs text-gray-500 whitespace-nowrap ">
-      {createdAt}
-    </span>
-  )}
-</div>
-);
-
-
-
-*/

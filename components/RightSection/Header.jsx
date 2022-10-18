@@ -15,7 +15,17 @@ const Header = () => {
         </h2>
       </div>
       <div className="flex flex-row items-center mr-2 gap-5 ">
-        <BsSearch className="text-gray-600" size={18} />
+        <button
+          onClick={() => {
+            const message = document.getElementById(
+              "92cabe4b-9150-4fd4-b93d-014dd4835938"
+            );
+            console.log("message", message);
+            message?.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+          }}
+        >
+          <BsSearch className="text-gray-600" size={18} />
+        </button>
         <FiChevronDown className="text-gray-600" size={20} />
       </div>
     </div>

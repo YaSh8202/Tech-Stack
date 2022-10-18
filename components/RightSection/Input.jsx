@@ -36,8 +36,7 @@ const Input = () => {
 
     try {
       if (selectedGroup.id === "open-ai") {
-
-        const toastId =  toast.loading("Thinking...");
+        const toastId = toast.loading("Thinking...");
 
         const response = await getResponse(message);
 
@@ -61,7 +60,7 @@ const Input = () => {
 
         return;
       }
-      
+
       const toastId = toast.loading("Sending message...");
       const messageId = uuid();
       const storageRef = ref(storage, messageId);
@@ -95,25 +94,27 @@ const Input = () => {
         });
       }
 
-      if (message.trim() !== "") {
-        await updateDoc(doc(firestore, "Groups", selectedGroup?.id), {
-          lastMessage: {
-            text: message,
-          },
-          updatedAt: serverTimestamp(),
-        });
-      }
+      await updateDoc(doc(firestore, "Groups", selectedGroup?.id), {
+        lastMessage: {
+          text: message.trim() === "" ? "Image" : message,
+        },
+        updatedAt: serverTimestamp(),
+      });
+
       toast.success("Message sent!", { id: toastId });
     } catch (err) {
       console.log(err);
     }
-    
+
     setFile(null);
   };
 
   return (
     <div className=" flex flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
-      <button disabled={!user || selectedGroup.id==='open-ai' } onClick={() => setShowEmojis((prev) => !prev)}>
+      <button
+        disabled={!user || selectedGroup.id === "open-ai"}
+        onClick={() => setShowEmojis((prev) => !prev)}
+      >
         {showEmojis ? (
           <AiOutlineCloseCircle size={24} />
         ) : (
@@ -130,10 +131,10 @@ const Input = () => {
           className="hidden"
           type="file"
           name="file"
-          disabled={!user || selectedGroup.id==='open-ai'}
+          disabled={!user || selectedGroup.id === "open-ai"}
         />
       </label>
-      <MarkdownModal disabled={!user || selectedGroup.id==='open-ai'}>
+      <MarkdownModal disabled={!user || selectedGroup.id === "open-ai"}>
         <BsMarkdown size={24} />
       </MarkdownModal>
       <form className="flex-1 relative " onSubmit={submitHandler}>
