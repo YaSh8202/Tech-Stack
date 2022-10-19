@@ -26,7 +26,10 @@ const SidebarNav = () => {
           >
             {/* {user ? ( */}
             <Image
-              src={user?.photoURL ?? "https://img.icons8.com/material-rounded/452/user.png"}
+              src={
+                user?.photoURL ??
+                "https://img.icons8.com/material-rounded/452/user.png"
+              }
               alt=""
               className="rounded-full cursor-pointer "
               layout="intrinsic"
@@ -74,10 +77,10 @@ const SidebarNav = () => {
               onClick={() => {
                 if (username) {
                   signOut(auth);
-                  setShowMenu(false);
                 } else {
                   setUserModal(true);
                 }
+                setShowMenu(false);
               }}
               className=""
             >

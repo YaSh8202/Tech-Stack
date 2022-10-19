@@ -22,9 +22,8 @@ const Input = () => {
   const [showEmojis, setShowEmojis] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
-  const { selectedGroup, setOpenAIMessages, openAIMessages } =
-    useContext(GroupContext);
-  const { user } = useContext(UserContext);
+  const { selectedGroup, setOpenAIMessages } = useContext(GroupContext);
+  const { user, username, setUserModal } = useContext(UserContext);
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
@@ -63,7 +62,7 @@ const Input = () => {
 
       const toastId = toast.loading("Sending message...");
       const messageId = uuid();
-      const storageRef = ref(storage, messageId);
+      const storageRef = ref(storage, "images", messageId);
       const messagesRef = doc(
         collection(
           doc(collection(firestore, "Groups"), selectedGroup?.id),
@@ -149,7 +148,12 @@ const Input = () => {
           onChange={(e) => setMessage(e.target.value)}
           placeholder={!user ? "Please Login..." : "Say Something..."}
           className="h-12 w-full bg-white rounded-full  border outline-none lg:mx-2 px-5 py-1 disabled:opacity-50 "
-          disabled={!selectedGroup || !user}
+          disabled={!selectedGroup || !user || !username}
+          onClick={() => {
+            if (!username) {
+              setUserModal(true);
+            }
+          }}
         />
         {showEmojis && (
           <div className="absolute left-[-8rem] bottom-16 ">

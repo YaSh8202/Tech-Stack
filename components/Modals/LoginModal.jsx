@@ -8,6 +8,7 @@ import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
 import { auth, firestore } from "../../lib/firebase";
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
 import { BsGithub } from "react-icons/bs";
+import { toast } from "react-hot-toast";
 
 const LoginModal = () => {
   const { user, username, userModal, setUserModal } = useContext(UserContext);
@@ -34,7 +35,7 @@ const LoginModal = () => {
         // The AuthCredential type that was used.
         const credential = GithubAuthProvider.credentialFromError(error);
         // ...
-
+        toast.error(errorMessage);
         console.log(errorCode, errorMessage, email, credential);
       });
   };
@@ -52,7 +53,7 @@ const LoginModal = () => {
         } fixed z-10  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
       ></div>
       <div className="absolute left-[50%] top-20 translate-x-[-50%] z-20">
-        {user ? (
+        {user&& username ? (
           <ProfileComponent username={username} user={user} />
         ) : (
           <>
@@ -186,7 +187,7 @@ function UsernameForm() {
             />
             <button
               type="submit"
-              className=" btn-green p-2 text-white rounded   "
+              className=" bg-green-400 p-2 text-white rounded   "
               disabled={!isValid}
             >
               Choose
