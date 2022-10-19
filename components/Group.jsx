@@ -8,30 +8,35 @@ const Group = ({ group }) => {
   const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
   const { image, name, lastMessage, updatedAt } = group;
   return (
-    <Flipped flipId={group.id} >
+    <Flipped flipId={group.id}>
       <div
         onClick={() => {
           setSelectedGroup(group);
         }}
-        className={`flex flex-row items-center h-16 rounded-md cursor-pointer hover:bg-gray-100 ${
+        className={`flex box-border flex-row items-center h-12 lg:h-16 rounded-md cursor-pointer hover:bg-gray-100 ${
           selectedGroup?.name === name ? "bg-gray-100" : ""
         }  `}
       >
-        <div className="w-16 h-16 ">
+        <div className="h-full aspect-square ">
           <GroupImage size={60} image={image} />
         </div>
-        <div className="flex flex-1 h-full py-2 flex-col items-start justify-center px-2 ">
+        <div className="flex flex-col flex-1 h-full lg:py-2  items-start justify-between px-2 ">
           <div className="flex flex-row w-full  items-center justify-between">
-            <h3 className="text-lg flex-1 text-gray-800">{name}</h3>
+            <h3 className=" text-base lg:text-lg truncate flex-[2] text-gray-800">
+              {name}
+            </h3>
+
             {updatedAt && (
-              <TimeAgo
-                className="text-xs text-gray-400"
-                datetime={`${new Date(updatedAt).toLocaleString()}`}
-              />
+              <p className="truncate self-start flex-1 text-right">
+                <TimeAgo
+                  className=" text-[10px] lg:text-xs text-gray-400 ml-2 truncate "
+                  datetime={`${new Date(updatedAt).toLocaleString()}`}
+                />
+              </p>
             )}
           </div>
           {updatedAt && (
-            <p className="text-xs w-24 text-gray-500 truncate ">
+            <p className="text-xs flex-1 w-full  text-gray-500 truncate ">
               {lastMessage?.text}
             </p>
           )}
@@ -47,7 +52,7 @@ export function GroupImage({ image, size }) {
   return (
     <Image
       src={image}
-      layout="intrinsic"
+      layout="responsive"
       width={size}
       height={size}
       alt=""

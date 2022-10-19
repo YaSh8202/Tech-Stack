@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GroupContext } from "../lib/groupContext";
 import GroupList from "./GroupList";
 import SearchBar from "./SearchBar";
 import SidebarNav from "./SidebarNav";
 
 const Sidebar = () => {
   const [search, setSearch] = React.useState("");
+  const {selectedGroup} = useContext(GroupContext);
   return (
-    <div className="bg-[#F5FAFC] h-full w-[30vw]  flex-col flex   border-r px-5 ">
+    <div className={` ${selectedGroup ? "hidden md:flex ":"flex"}  bg-[#F5FAFC] h-full   flex-col flex   border-r px-5 flex-1  `}>
       <SidebarNav />
       <SearchBar search={search} setSearch={setSearch} />
       <GroupList keyword={search} />

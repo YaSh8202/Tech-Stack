@@ -3,12 +3,19 @@ import { GroupContext } from "../../lib/groupContext";
 import { GroupImage } from "../Group";
 import { BsSearch } from "react-icons/bs";
 import { FiChevronDown } from "react-icons/fi";
+import { IoArrowBackOutline } from "react-icons/io5";
 
 const Header = () => {
-  const { selectedGroup } = useContext(GroupContext);
+  const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
   return (
     <div className="w-full flex flex-row justify-between py-4 px-6 bg-[#F7F7FC] h-[70px]  ">
       <div className="flex flex-1 flex-row items-center">
+        <button
+          onClick={() => setSelectedGroup(null)}
+          className="block md:hidden"
+        >
+          <IoArrowBackOutline className="aspect-square text-gray-700 " />
+        </button>
         <GroupImage size={50} image={selectedGroup?.image} />
         <h2 className="ml-4 text-lg text-gray-700 font-semibold">
           {selectedGroup?.name}
@@ -21,7 +28,11 @@ const Header = () => {
               "92cabe4b-9150-4fd4-b93d-014dd4835938"
             );
             console.log("message", message);
-            message?.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+            message?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+              inline: "nearest",
+            });
           }}
         >
           <BsSearch className="text-gray-600" size={18} />

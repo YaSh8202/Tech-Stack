@@ -10,7 +10,11 @@ const RightSection = () => {
   if (!selectedGroup) return null;
 
   return (
-    <section className="md:flex flex-col flex-1 ">
+    <section
+      className={` flex-col flex-[3] ${
+        !selectedGroup ? "hidden md:flex " : "flex md:flex"
+      } `}
+    >
       <Header />
       <ChatBox />
       <Input />

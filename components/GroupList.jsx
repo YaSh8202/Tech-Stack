@@ -25,7 +25,7 @@ const GroupList = ({ keyword }) => {
     <Flipper
       spring="veryGentle"
       flipKey={`${filteredGroups?.map((group) => group.id).join("-")}`}
-      className="w-full flex-1 mt-3 flex flex-col gap-2 overflow-y-scroll scrollbar-hide "
+      className="w-full flex-1 mt-3 flex flex-col gap-3 overflow-y-scroll scrollbar-hide "
     >
       {/* <Group
         key="open-ai"

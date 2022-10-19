@@ -1,14 +1,13 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../lib/userContext";
-import ProfileAvatar from "./ProfileAvatar";
 import { FaUserCircle } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
-import LoginModal from "./Modals/LoginModal";
 import { SiOpenai } from "react-icons/si";
 import { GroupContext } from "../lib/groupContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { BsGithub } from "react-icons/bs";
+import Image from "next/image";
+// import { BsGithub } from "react-icons/bs";
 
 const SidebarNav = () => {
   const { user, username, setUserModal } = useContext(UserContext);
@@ -19,26 +18,28 @@ const SidebarNav = () => {
     <div className="  w-full px-3 py-2 h-16">
       <div className="flex-row h-full flex items-center justify-between">
         <div>
-          {user ? (
-            <button
-              onClick={() => {
-                setUserModal(true);
-              }}
-            >
-              <ProfileAvatar profilePic={user.photoURL} size={40} />
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                setUserModal(true);
-              }}
-            >
+          <button
+            className="w-11 h-11  bg-gray-200 p-1 rounded-full "
+            onClick={() => {
+              setUserModal(true);
+            }}
+          >
+            {/* {user ? ( */}
+            <Image
+              src={user?.photoURL ?? "https://img.icons8.com/material-rounded/452/user.png"}
+              alt=""
+              className="rounded-full cursor-pointer "
+              layout="intrinsic"
+              width={40}
+              height={40}
+            />
+            {/* ) : (
               <FaUserCircle
                 className="text-gray-600 bg-transparent"
                 size={40}
               />
-            </button>
-          )}
+            )} */}
+          </button>
         </div>
         <div className=" flex items-center relative ">
           <button
@@ -90,4 +91,3 @@ const SidebarNav = () => {
 };
 
 export default SidebarNav;
-
