@@ -7,17 +7,21 @@ import LoginModal from "../Modals/LoginModal";
 
 const RightSection = () => {
   const { selectedGroup } = useContext(GroupContext);
-  if (!selectedGroup) return null;
+  // if (!selectedGroup) return null;
 
   return (
     <section
       className={` flex-col flex-[3] ${
-        !selectedGroup ? "hidden md:flex " : "flex md:flex"
+        !selectedGroup ? "hidden md:flex " : "flex"
       } `}
     >
-      <Header />
-      <ChatBox />
-      <Input />
+      {selectedGroup ? (
+        <>
+          <Header />
+          <ChatBox />
+          <Input />
+        </>
+      ) : null}
     </section>
   );
 };

@@ -110,33 +110,37 @@ const Input = () => {
   };
 
   return (
-    <div className=" flex flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
-      <button
-        disabled={!user || selectedGroup.id === "open-ai"}
-        onClick={() => setShowEmojis((prev) => !prev)}
-      >
-        {showEmojis ? (
-          <AiOutlineCloseCircle size={24} />
-        ) : (
-          <BsEmojiLaughing size={24} />
-        )}
-      </button>
+    <div className=" flex flex-row-reverse md:flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
+      {selectedGroup?.id !== "open-ai" && (
+        <>
+          <button
+            disabled={!user || selectedGroup.id === "open-ai"}
+            onClick={() => setShowEmojis((prev) => !prev)}
+          >
+            {showEmojis ? (
+              <AiOutlineCloseCircle size={24} />
+            ) : (
+              <BsEmojiLaughing size={24} />
+            )}
+          </button>
 
-      <label className="cursor-pointer">
-        <PlusIcon size={24} />
-        <input
-          onChange={(e) => {
-            setFile(e.target.files[0]);
-          }}
-          className="hidden"
-          type="file"
-          name="file"
-          disabled={!user || selectedGroup.id === "open-ai"}
-        />
-      </label>
-      <MarkdownModal disabled={!user || selectedGroup.id === "open-ai"}>
-        <BsMarkdown size={24} />
-      </MarkdownModal>
+          <label className="cursor-pointer">
+            <PlusIcon size={24} />
+            <input
+              onChange={(e) => {
+                setFile(e.target.files[0]);
+              }}
+              className="hidden"
+              type="file"
+              name="file"
+              disabled={!user || selectedGroup.id === "open-ai"}
+            />
+          </label>
+          <MarkdownModal disabled={!user || selectedGroup.id === "open-ai"}>
+            <BsMarkdown size={24} />
+          </MarkdownModal>
+        </>
+      )}
       <form className="flex-1 relative " onSubmit={submitHandler}>
         <input
           id="message"
@@ -144,7 +148,7 @@ const Input = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={!user ? "Please Login..." : "Say Something..."}
-          className="h-12 w-full bg-white rounded-full  border outline-none mx-2 px-5 py-1 disabled:opacity-50 "
+          className="h-12 w-full bg-white rounded-full  border outline-none lg:mx-2 px-5 py-1 disabled:opacity-50 "
           disabled={!selectedGroup || !user}
         />
         {showEmojis && (

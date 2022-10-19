@@ -14,7 +14,7 @@ const Header = () => {
           onClick={() => setSelectedGroup(null)}
           className="block md:hidden"
         >
-          <IoArrowBackOutline className="aspect-square text-gray-700 " />
+          <IoArrowBackOutline className=" w-5 h-5 text-gray-700 " />
         </button>
         <GroupImage size={50} image={selectedGroup?.image} />
         <h2 className="ml-4 text-lg text-gray-700 font-semibold">
