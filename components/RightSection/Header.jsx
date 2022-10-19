@@ -27,7 +27,6 @@ const Header = () => {
             const message = document.getElementById(
               "92cabe4b-9150-4fd4-b93d-014dd4835938"
             );
-            console.log("message", message);
             message?.scrollIntoView({
               behavior: "smooth",
               block: "center",

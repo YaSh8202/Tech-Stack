@@ -34,7 +34,7 @@ const MarkdownModal = ({ children }) => {
   const { markdown, setMarkdown, selectedGroup } = useContext(GroupContext);
 
   function handleEditorChange({ html, text }) {
-    console.log("handleEditorChange", text);
+    // console.log("handleEditorChange", text);
     setMarkdown(text);
   }
   async function handleSendMarkdown(event) {

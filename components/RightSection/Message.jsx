@@ -34,7 +34,6 @@ const Message = ({ message }) => {
     console.log(err);
   }
 
-  console.log(sender);
 
   useEffect(() => {
     if (message?.senderId === "open-ai") {

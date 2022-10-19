@@ -12,7 +12,6 @@ import { toast } from "react-hot-toast";
 
 const LoginModal = () => {
   const { user, username, userModal, setUserModal } = useContext(UserContext);
-  console.log(user);
   const signInWithGithub = async () => {
     const provider = new GithubAuthProvider();
     signInWithPopup(auth, provider)
@@ -23,7 +22,7 @@ const LoginModal = () => {
 
         // The signed-in user info.
         const user = result.user;
-        console.log(user, result, token);
+        // console.log(user, result, token);
         // ...
       })
       .catch((error) => {
@@ -52,7 +51,7 @@ const LoginModal = () => {
           userModal ? "" : "hidden"
         } fixed z-10  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
       ></div>
-      <div className="absolute left-[50%] top-20 translate-x-[-50%] z-20">
+      <div className="absolute left-[50%] top-28 translate-x-[-50%] z-20">
         {user&& username ? (
           <ProfileComponent username={username} user={user} />
         ) : (
@@ -243,7 +242,7 @@ export const ProfileComponent = ({ user, username }) => {
   return (
     <>
       {/* <div className="bg-gray-200 font-sans h-screen w-full flex flex-row justify-center items-center"> */}
-      <div className="card relative top-32 p-5 py-8   w-96 mx-auto bg-white  shadow-xl hover:shadow">
+      <div className="card relative p-5 py-8   w-96 mx-auto bg-white  shadow-xl hover:shadow">
         <img
           className="w-32 mx-auto rounded-full -mt-20 border-8 border-white"
           src={user.photoURL}
