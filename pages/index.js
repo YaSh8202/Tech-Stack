@@ -6,17 +6,15 @@ import RightSection from "../components/RightSection/RightSection";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { firestore, postToJSON } from "../lib/firebase";
 import { GroupContext } from "../lib/groupContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 export default function Home({ groups }) {
-  // const RightSection = dynamic(
-  //   () => import("../components/RightSection/RightSection"),
-  //   {
-  //     ssr: false,
-  //   }
-  // );
   const { setGroups } = useContext(GroupContext);
-  setGroups(groups);
+
+  useEffect(() => {
+    setGroups(groups);
+  }, []);
+
   return (
     <div className="h-screen w-screen overflow-hidden flex flex-row min-w-full  ">
       <Head>
@@ -46,5 +44,6 @@ export async function getStaticProps() {
     props: {
       groups,
     },
+    // revalidate: 1000,
   };
 }

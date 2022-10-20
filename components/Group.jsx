@@ -27,7 +27,7 @@ const Group = ({ group }) => {
             </h3>
 
             {updatedAt && (
-              <p className="truncate self-start flex-1 text-right">
+              <p className="truncate self-start flex-1 text-right text-[10px] lg:text-xs text-gray-400  ">
                 <TimeAgo
                   className=" text-[10px] lg:text-xs text-gray-400 ml-2 truncate "
                   datetime={`${new Date(updatedAt).toLocaleString()}`}
