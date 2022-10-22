@@ -7,7 +7,7 @@ const SearchInput = ({ searchKey, setSearchKey, hideSearchBar }) => {
       <button onClick={hideSearchBar}>
         <BiLeftArrowAlt className="h-5 w-5 text-gray-700" />
       </button>
-      <form className="h-full flex-1 flex items-center ">
+      <div className="h-full flex-1 flex items-center ">
         <input
           type="text"
           className="pl-2 h-full bg-transparent placeholder:text-gray-800 flex-1 outline-none "
@@ -17,7 +17,7 @@ const SearchInput = ({ searchKey, setSearchKey, hideSearchBar }) => {
           onChange={(e) => setSearchKey(e.target.value)}
         />
         {/* <button htlmlFor="search" type="submit" className="hidden" /> */}
-      </form>
+      </div>
     </div>
   );
 };
