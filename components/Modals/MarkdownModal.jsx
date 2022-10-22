@@ -79,7 +79,6 @@ const MarkdownModal = ({ children }) => {
       </button>
     );
   }
-  console.log(window.innerWidth);
   return (
     <div className="absolute inset-0">
       <div

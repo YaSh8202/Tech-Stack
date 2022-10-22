@@ -2,11 +2,13 @@ import { collection, doc, getDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import TimeAgo from "timeago-react";
 import { firestore } from "../../lib/firebase";
+import { GroupContext } from "../../lib/groupContext";
 import { UserContext } from "../../lib/userContext";
 
 const SearchMessage = ({ message }) => {
   const [sender, setSender] = useState(null);
   const { username } = useContext(UserContext);
+  const { setShowSearchBar } = useContext(GroupContext);
   const isSender = username === sender?.username;
   let createdAt = null;
   try {
@@ -57,6 +59,9 @@ const SearchMessage = ({ message }) => {
         });
         // add transition
         msg?.classList.add("animate-scaleFocus");
+        if (window.innerWidth < 1024) {
+          setShowSearchBar(false);
+        }
       }}
       className="flex flex-col px-3 py-2 box-border w-full bg-gray-100 rounded cursor-pointer hover:scale-[1.02] hover:shadow  duration-150  "
     >
