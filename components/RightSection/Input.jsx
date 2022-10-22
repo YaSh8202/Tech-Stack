@@ -1,5 +1,5 @@
 import EmojiPicker from "emoji-picker-react";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { BsEmojiLaughing, BsMarkdown } from "react-icons/bs";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { v4 as uuid } from "uuid";
@@ -24,9 +24,11 @@ const Input = () => {
   const [file, setFile] = useState(null);
   const { selectedGroup, setOpenAIMessages } = useContext(GroupContext);
   const { user, username, setUserModal } = useContext(UserContext);
+  const inputRef = useRef(null);
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
+    inputRef.current.focus();
   };
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -114,7 +116,10 @@ const Input = () => {
         <>
           <button
             disabled={!user || selectedGroup.id === "open-ai"}
-            onClick={() => setShowEmojis((prev) => !prev)}
+            onClick={() => {
+              setShowEmojis((prev) => !prev);
+              inputRef.current.focus();
+            }}
           >
             {showEmojis ? (
               <AiOutlineCloseCircle size={24} />
@@ -142,6 +147,7 @@ const Input = () => {
       )}
       <form className="flex-1 relative " onSubmit={submitHandler}>
         <input
+          ref={inputRef}
           id="message"
           type="text"
           value={message}
@@ -156,8 +162,11 @@ const Input = () => {
           }}
         />
         {showEmojis && (
-          <div className="absolute left-[-8rem] bottom-16 ">
-            <EmojiPicker onEmojiClick={emojiClickHandler} />
+          <div className="absolute left-0 md:left-[-8rem] bottom-16 ">
+            <EmojiPicker
+              autoFocusSearch={false}
+              onEmojiClick={emojiClickHandler}
+            />
           </div>
         )}
         <button type="submit" className="hidden" />

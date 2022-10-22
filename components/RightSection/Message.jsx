@@ -92,7 +92,7 @@ const Message = ({ message }) => {
         </div>
         <div className="text-[10px]">{createdAt}</div>
       </div>
-      <div>
+      <div className="text-xs" >
         {message.isMarkdown ? (
           // if message is markdown
           <MdEditor

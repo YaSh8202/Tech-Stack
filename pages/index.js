@@ -2,10 +2,12 @@ import Head from "next/head";
 import LoginModal from "../components/Modals/LoginModal";
 import Sidebar from "../components/Sidebar";
 import RightSection from "../components/RightSection/RightSection";
+import SearchSideBar from "../components/SearchSideBar/SearchSideBar";
+import { useContext } from "react";
+import { GroupContext } from "../lib/groupContext";
 
-
-export default function Home({ groups }) {
-  
+export default function Home({}) {
+  const { showSearchBar } = useContext(GroupContext);
   return (
     <div className="h-screen w-screen overflow-hidden flex flex-row min-w-full  ">
       <Head>
@@ -13,6 +15,7 @@ export default function Home({ groups }) {
       </Head>
       <Sidebar />
       <RightSection />
+      {showSearchBar && <SearchSideBar />}
       <LoginModal />
     </div>
   );

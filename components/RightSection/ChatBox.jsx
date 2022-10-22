@@ -13,42 +13,16 @@ import Message from "./Message";
 import ScrollableFeed from "react-scrollable-feed";
 
 const ChatBox = () => {
-  const { selectedGroup, openAIMessages } = useContext(GroupContext);
-  const [messages, setMessages] = useState([]);
-  useEffect(() => {
-    if (!selectedGroup) return;
-    if (selectedGroup.id === "open-ai") {
-      setMessages(openAIMessages);
-      return;
-    }
-
-    const getMessages = async () => {
-      const messagesRef = collection(
-        doc(collection(firestore, "Groups"), selectedGroup?.id),
-        "messages"
-      );
-      const messagesQuery = query(messagesRef, orderBy("createdAt"));
-      const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
-        const msgs = [];
-        snapshot.forEach(async (d) => {
-          msgs.push(postToJSON(d));
-        });
-
-        setMessages(msgs);
-      });
-      return unsubscribe;
-    };
-    getMessages();
-    // return () => unsubscribe();
-  }, [selectedGroup, openAIMessages]);
+  const { messages } = useContext(GroupContext);
   return (
     <ScrollableFeed
       id="messages"
       className="flex flex-col gap-2 flex-1 w-full px-2 md:px-6  overflow-auto overflow-y-scroll scrollbar-hide  "
     >
-      {messages && messages.map((message) => (
-        <Message key={message.id} message={message} />
-      ))}
+      {messages &&
+        messages.map((message, i) => (
+          <Message key={message.id} message={message} />
+        ))}
     </ScrollableFeed>
   );
 };

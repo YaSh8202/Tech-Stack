@@ -6,7 +6,7 @@ import { FiChevronDown } from "react-icons/fi";
 import { IoArrowBackOutline } from "react-icons/io5";
 
 const Header = () => {
-  const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
+  const { selectedGroup, setSelectedGroup, setShowSearchBar } = useContext(GroupContext);
   return (
     <div className="w-full flex flex-row justify-between py-4 px-6 bg-[#F7F7FC] h-[70px]  ">
       <div className="flex flex-1 flex-row items-center">
@@ -24,14 +24,7 @@ const Header = () => {
       <div className="flex flex-row items-center mr-2 gap-5 ">
         <button
           onClick={() => {
-            const message = document.getElementById(
-              "92cabe4b-9150-4fd4-b93d-014dd4835938"
-            );
-            message?.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-              inline: "nearest",
-            });
+            setShowSearchBar(true);
           }}
         >
           <BsSearch className="text-gray-600" size={18} />
