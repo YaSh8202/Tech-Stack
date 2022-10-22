@@ -30,12 +30,12 @@ const SearchSideBar = () => {
       initial={"hidden"}
       whileInView="visible"
       viewport={{ once: true }}
-      transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
+      transition={{ duration: 0.5 }}
       variants={{
-        visible: { x: "0" },
-        hidden: { x: "10vw" },
+        visible: { width: "100%" },
+        hidden: { width: "0%" },
       }}
-      className="flex-[1.25] box-border border-l overflow-hidden"
+      className=" absolute lg:relative max-w-[20rem] bg-gray-50 right-0 top-0 bottom-0 lg:flex-[1.25] box-border border-l overflow-hidden"
     >
       {/* Header */}
       <div className="w-full box-border overflow-hidden flex items-center flex-row py-4 px-4 bg-[#F7F7FC] h-[70px]  ">

@@ -99,6 +99,7 @@ const Message = ({ message }) => {
             value={message.text}
             view={{ menu: false, md: false, html: true }}
             renderHTML={renderHTML}
+            readOnly
           />
         ) : (
           <div className="flex flex-col gap-2  py-1  ">

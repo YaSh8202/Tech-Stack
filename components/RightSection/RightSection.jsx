@@ -11,7 +11,7 @@ const RightSection = () => {
 
   return (
     <section
-      className={` flex-col flex-[3] ${
+      className={` flex-col flex-[3] overflow-auto ${
         !selectedGroup ? "hidden md:flex " : "flex"
       } `}
     >

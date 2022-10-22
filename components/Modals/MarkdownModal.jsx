@@ -79,7 +79,7 @@ const MarkdownModal = ({ children }) => {
       </button>
     );
   }
-
+  console.log(window.innerWidth);
   return (
     <div className="absolute inset-0">
       <div
@@ -100,7 +100,7 @@ const MarkdownModal = ({ children }) => {
         <button
           onClick={handleSendMarkdown}
           title="Send Message"
-          className="absolute z-30 right-14 top-[34.5px] group "
+          className="absolute z-30 right-9 bottom-9 md:right-14 md:top-[34.5px] flex   group "
         >
           <AiOutlineSend className="text-lg text-gray-800 group-hover:text-green-500 " />
         </button>
@@ -110,7 +110,13 @@ const MarkdownModal = ({ children }) => {
               style={{ height: "500px" }}
               renderHTML={(text) => mdParser.render(text)}
               onChange={handleEditorChange}
-              canView={{ menu: true, md: true, html: true, fullScreen: false }}
+              canView={{
+                menu: window.innerWidth > 850 ? true : false,
+                md: true,
+                html: true,
+                fullScreen: false,
+              }}
+              view={{ html: window.innerWidth > 850 ? true : false }}
               syncScrollMode={["leftFollowRight", "rightFollowLeft"]}
               value={markdown}
               shortcuts={true}

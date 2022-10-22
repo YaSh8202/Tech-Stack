@@ -63,7 +63,7 @@ const SearchMessage = ({ message }) => {
       <p className="text-xs text-gray-600"> {createdAt}</p>
       <div className="flex flex-row items-center">
         <p className="text-sm text-gray-600 underline">@{sender?.username}</p>
-        <p className="ml-2 text-sm text-gray-700 font-medium flex-1 truncate ">
+        <p className="ml-2 text-sm text-gray-700 font-medium w-min flex-1 truncate ">
           {message?.text}
         </p>
       </div>
