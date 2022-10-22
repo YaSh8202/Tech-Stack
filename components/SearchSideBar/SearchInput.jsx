@@ -9,6 +9,7 @@ const SearchInput = ({ searchKey, setSearchKey, hideSearchBar }) => {
       </button>
       <div className="h-full flex-1 flex items-center ">
         <input
+          autoFocus
           type="text"
           className="pl-2 h-full bg-transparent placeholder:text-gray-800 flex-1 outline-none "
           placeholder="Search"

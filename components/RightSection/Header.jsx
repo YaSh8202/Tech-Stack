@@ -21,13 +21,14 @@ const Header = () => {
           {selectedGroup?.name}
         </h2>
       </div>
-      <div className="flex flex-row items-center mr-2 gap-5 ">
+      <div className="flex flex-row items-center mr-2 gap-5  ">
         <button
           onClick={() => {
-            setShowSearchBar(true);
+            setShowSearchBar(prev=>!prev);
           }}
+          className="hover:scale-105 checked:bg-gray-50 rounded-full p-1 "
         >
-          <BsSearch className="text-gray-600" size={18} />
+          <BsSearch className="text-gray-600  " size={18} />
         </button>
         <FiChevronDown className="text-gray-600" size={20} />
       </div>

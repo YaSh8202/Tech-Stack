@@ -25,6 +25,22 @@ module.exports = {
           borderColor: "#e5e7eb",
         },
       }),
+      keyframes: {
+        'scaleFocus': {
+          "0% ": {
+            transform: "scale(1)",
+          },
+          '50%':{
+            transform: "scale(1.1)",
+          },
+          "100%": {
+            transform: "scale(1)",
+          },
+        },
+      },
+      animation: {
+        'scaleFocus': 'scaleFocus 1s ease-in-out',
+      }
     },
   },
   plugins: [

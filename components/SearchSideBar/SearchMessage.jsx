@@ -55,12 +55,14 @@ const SearchMessage = ({ message }) => {
           block: "center",
           inline: "nearest",
         });
+        // add transition
+        msg?.classList.add("animate-scaleFocus");
       }}
-      className="flex flex-col px-3 py-2 box-border w-full bg-gray-100 rounded"
+      className="flex flex-col px-3 py-2 box-border w-full bg-gray-100 rounded cursor-pointer hover:scale-[1.02] hover:shadow  duration-150  "
     >
       <p className="text-xs text-gray-600"> {createdAt}</p>
       <div className="flex flex-row items-center">
-        <p className="text-sm text-gray-600 ">{sender?.username}</p>
+        <p className="text-sm text-gray-600 underline">@{sender?.username}</p>
         <p className="ml-2 text-sm text-gray-700 font-medium flex-1 truncate ">
           {message?.text}
         </p>
