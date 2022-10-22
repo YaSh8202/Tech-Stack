@@ -11,6 +11,9 @@
   ol {
     @apply list-decimal;
   }
+  ins{
+    @apply underline;
+  }
   /* ... */
 }
 

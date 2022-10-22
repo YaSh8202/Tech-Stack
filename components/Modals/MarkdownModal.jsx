@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { auth, firestore } from "../../lib/firebase";
 import { toast } from "react-hot-toast";
+import markdownItIns from "markdown-it-ins";
 
 function onImageUpload(file) {
   return new Promise((resolve) => {
@@ -29,6 +30,7 @@ function onImageUpload(file) {
 }
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
+mdParser.use(markdownItIns);
 const MarkdownModal = ({ children }) => {
   const [showModal, setShowModal] = React.useState(false);
   const { markdown, setMarkdown, selectedGroup } = useContext(GroupContext);

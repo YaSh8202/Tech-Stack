@@ -10,8 +10,10 @@ import MarkdownIt from "markdown-it";
 import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
 import styles from "../styles.module.css";
+import markdownItIns from "markdown-it-ins";
 
-const mdParser = new MarkdownIt(/* Markdown-it options */);
+const mdParser = new MarkdownIt();
+mdParser.use(markdownItIns);
 const Message = ({ message }) => {
   const [sender, setSender] = useState(null);
   const { username } = useContext(UserContext);
@@ -34,7 +36,6 @@ const Message = ({ message }) => {
     console.log(err);
   }
 
-
   useEffect(() => {
     if (message?.senderId === "open-ai") {
       return;
@@ -53,7 +54,7 @@ const Message = ({ message }) => {
     return mdParser.render(text);
   }
 
-  if(!message) {
+  if (!message) {
     return null;
   }
 
@@ -92,7 +93,7 @@ const Message = ({ message }) => {
         </div>
         <div className="text-[10px]">{createdAt}</div>
       </div>
-      <div className="text-xs" >
+      <div className="text-xs overflow-hidden w-full ">
         {message.isMarkdown ? (
           // if message is markdown
           <MdEditor
@@ -100,6 +101,7 @@ const Message = ({ message }) => {
             view={{ menu: false, md: false, html: true }}
             renderHTML={renderHTML}
             readOnly
+            plugins={[markdownItIns]}
           />
         ) : (
           <div className="flex flex-col gap-2  py-1  ">
