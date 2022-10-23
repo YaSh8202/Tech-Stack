@@ -61,7 +61,7 @@ const Message = ({ message }) => {
   return (
     <div
       id={message.id}
-      className={` border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[10rem] ${
+      className={` max-w-[90vw] border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[10rem] ${
         isSender
           ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
           : "bg-white mr-auto ml-1 rounded-tl-none message-arrow-left "
