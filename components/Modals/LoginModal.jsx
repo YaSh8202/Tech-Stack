@@ -9,6 +9,7 @@ import { auth, firestore } from "../../lib/firebase";
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
 import { BsGithub } from "react-icons/bs";
 import { toast } from "react-hot-toast";
+import Image from "next/image";
 
 const LoginModal = () => {
   const { user, username, userModal, setUserModal } = useContext(UserContext);
@@ -52,7 +53,7 @@ const LoginModal = () => {
         } fixed z-10  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
       ></div>
       <div className="absolute left-[50%] top-28 translate-x-[-50%] z-20">
-        {user&& username ? (
+        {user && username ? (
           <ProfileComponent username={username} user={user} />
         ) : (
           <>
@@ -242,12 +243,17 @@ export const ProfileComponent = ({ user, username }) => {
   return (
     <>
       {/* <div className="bg-gray-200 font-sans h-screen w-full flex flex-row justify-center items-center"> */}
-      <div className="card relative p-5 py-8   w-96 mx-auto bg-white  shadow-xl hover:shadow">
-        <img
-          className="w-32 mx-auto rounded-full -mt-20 border-8 border-white"
-          src={user.photoURL}
-          alt=""
-        />
+      <div className="card relative p-5 py-8 rounded   w-96 mx-auto bg-white  shadow-2xl hover:shadow">
+        <div className="w-32 mx-auto rounded-full -mt-20 border-8 border-white">
+          <Image
+            className="rounded-full"
+            src={user.photoURL}
+            alt=""
+            layout="responsive"
+            width={200}
+            height={200}
+          />
+        </div>
         <div className="text-center mt-2 text-3xl font-medium">
           {user?.displayName}
         </div>

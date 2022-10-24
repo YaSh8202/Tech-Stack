@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../lib/userContext";
 import { FaUserCircle } from "react-icons/fa";
-import { FiChevronDown } from "react-icons/fi";
+import { FiChevronDown, FiGithub } from "react-icons/fi";
 import { SiOpenai } from "react-icons/si";
 import { GroupContext } from "../lib/groupContext";
 import { signOut } from "firebase/auth";
@@ -24,7 +24,6 @@ const SidebarNav = () => {
               setUserModal(true);
             }}
           >
-            {/* {user ? ( */}
             <Image
               src={
                 user?.photoURL ??
@@ -36,15 +35,20 @@ const SidebarNav = () => {
               width={40}
               height={40}
             />
-            {/* ) : (
-              <FaUserCircle
-                className="text-gray-600 bg-transparent"
-                size={40}
-              />
-            )} */}
           </button>
         </div>
-        <div className=" flex items-center relative ">
+        <div className=" flex items-center relative gap-4">
+          <a
+            target={"_blank"}
+            rel="noopener noreferrer"
+            href={"https://github.com/YaSh8202/Tech-Stack"}
+            className="group"
+          >
+            <FiGithub
+              className={`  text-gray-600 bg-transparent  group-hover:scale-105  `}
+              size={26}
+            />
+          </a>
           <button
             onClick={() => {
               setSelectedGroup({
@@ -59,12 +63,13 @@ const SidebarNav = () => {
               className={` ${
                 selectedGroup?.id === "open-ai" ? "text-[#128C7E]" : ""
               } text-gray-600 bg-transparent  group-hover:text-[#128C7E] group-hover:scale-105  `}
-              size={28}
+              size={26}
             />
           </button>
+
           <button
             onClick={() => setShowMenu((prev) => !prev)}
-            className="ml-3 relative group "
+            className=" relative group "
           >
             <FiChevronDown className="text-gray-600  " size={28} />
           </button>

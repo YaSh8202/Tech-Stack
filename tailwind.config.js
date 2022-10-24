@@ -26,12 +26,13 @@ module.exports = {
         },
       }),
       keyframes: {
-        'scaleFocus': {
+        scaleFocus: {
           "0% ": {
             transform: "scale(1)",
           },
-          '50%':{
+          "50%": {
             transform: "scale(1.1)",
+            backgroundColor: "#d1d5db",
           },
           "100%": {
             transform: "scale(1)",
@@ -39,8 +40,8 @@ module.exports = {
         },
       },
       animation: {
-        'scaleFocus': 'scaleFocus 1s ease-in-out',
-      }
+        scaleFocus: "scaleFocus 1.5s ease-in-out",
+      },
     },
   },
   plugins: [
