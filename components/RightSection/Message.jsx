@@ -16,11 +16,20 @@ const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 
 const renderText = (txt) =>
-  txt
-    .split(" ")
-    .map((part) =>
-      URL_REGEX.test(part) ? <a className="underline text-blue-700" href={part}>{part} </a> : part + " "
-    );
+  txt.split(" ").map((part) =>
+    URL_REGEX.test(part) ? (
+      <a
+        target={"_blank"}
+        rel="noopener noreferrer"
+        className="underline text-blue-700"
+        href={part}
+      >
+        {part}{" "}
+      </a>
+    ) : (
+      part + " "
+    )
+  );
 
 const mdParser = new MarkdownIt();
 mdParser.use(markdownItIns);
@@ -126,9 +135,11 @@ const Message = ({ message }) => {
                 />
               </div>
             )}
-            <p className="text-sm whitespace-pre-wrap self-end cl">
-              {renderText(message.text)}
-            </p>
+            {message.text && (
+              <p className="text-sm whitespace-pre-wrap self-end cl">
+                {renderText(message.text.trim())}
+              </p>
+            )}
           </div>
         )}
       </div>
