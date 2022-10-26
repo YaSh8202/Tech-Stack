@@ -11,10 +11,17 @@
   ol {
     @apply list-decimal;
   }
-  ins{
+  ins {
     @apply underline;
   }
   /* ... */
+}
+
+@layer components {
+  .about {
+    -moz-text-align-last: center; /* Firefox 12+ */
+    text-align-last: center;
+  }
 }
 
 :root {
@@ -67,11 +74,6 @@ button[disabled] {
   filter: brightness(80%);
   cursor: not-allowed;
 }
-
-
-
-
-
 
 /* File uploads */
 

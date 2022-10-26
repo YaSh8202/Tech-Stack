@@ -62,6 +62,9 @@ const SearchMessage = ({ message }) => {
         if (window.innerWidth < 1024) {
           setShowSearchBar(false);
         }
+        setTimeout(() => {
+          msg?.classList.remove("animate-scaleFocus");
+        }, 1000);
       }}
       className="flex flex-col px-3 py-2 box-border w-full bg-gray-100 rounded cursor-pointer hover:scale-[1.02] hover:shadow  duration-150  "
     >

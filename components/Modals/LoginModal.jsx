@@ -1,18 +1,33 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { CgStack } from "react-icons/cg";
 import GoogleButton from "./GoogleButton";
 import { IoClose } from "react-icons/io5";
 import { UserContext } from "../../lib/userContext";
 import debounce from "lodash.debounce";
-import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  writeBatch,
+} from "firebase/firestore";
 import { auth, firestore } from "../../lib/firebase";
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
 import { BsGithub } from "react-icons/bs";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
+import { AiOutlineEdit } from "react-icons/ai";
+import { TiTickOutline } from "react-icons/ti";
 
 const LoginModal = () => {
-  const { user, username, userModal, setUserModal } = useContext(UserContext);
+  const { user, username, userModal, setUserModal, about } =
+    useContext(UserContext);
   const signInWithGithub = async () => {
     const provider = new GithubAuthProvider();
     signInWithPopup(auth, provider)
@@ -54,7 +69,7 @@ const LoginModal = () => {
       ></div>
       <div className="absolute left-[50%] top-28 translate-x-[-50%] z-20">
         {user && username ? (
-          <ProfileComponent username={username} user={user} />
+          <ProfileComponent about={about} username={username} user={user} />
         ) : (
           <>
             <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -238,11 +253,29 @@ const GithubOAuthButton = ({ onClick }) => (
     <p className="text-white text-lg font-medium">Signin with Github</p>
   </button>
 );
+function auto_grow(element) {
+  element.style.height = "16px";
+  element.style.height = element.scrollHeight + "px";
+}
 
-export const ProfileComponent = ({ user, username }) => {
+export const ProfileComponent = ({
+  user,
+  username,
+  about = "Front end Developer, avid reader. Love to take a long walk, swim",
+}) => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [newAbout, setNewAbout] = useState(about);
+  const aboutRef = useRef(null);
+
+  const submitEdit = useCallback(() => {
+    const ref = doc(collection(firestore, "users"), user.uid);
+    updateDoc(ref, {
+      about: newAbout,
+    });
+  }, [newAbout, user.uid]);
+
   return (
     <>
-      {/* <div className="bg-gray-200 font-sans h-screen w-full flex flex-row justify-center items-center"> */}
       <div className="card relative p-5 py-8 rounded   w-96 mx-auto bg-white  shadow-2xl hover:shadow">
         <div className="w-32 mx-auto rounded-full -mt-20 border-8 border-white">
           <Image
@@ -258,24 +291,41 @@ export const ProfileComponent = ({ user, username }) => {
           {user?.displayName}
         </div>
         <div className="text-center mt-2 font-light text-sm">@{username}</div>
-        {/* <div className="text-center font-normal text-lg">Kerala</div> */}
-        <div className="px-6 text-center mt-2 font-light text-sm">
-          <p>
-            Front end Developer, avid reader. Love to take a long walk, swim
-          </p>
+        <div className="mt-3 font-light text-sm flex ">
+          <textarea
+            onInput={(e) => auto_grow(aboutRef.current)}
+            onChange={(e) => {
+              setNewAbout(e.target.value);
+            }}
+            readOnly={!isEdit}
+            className={`${
+              isEdit ? "border-b block " : ""
+            } w-full about  min-h-[21px] resize-none outline-none overflow-hidden   `}
+            value={newAbout}
+            ref={aboutRef}
+            placeholder="About you"
+          />
+
+          <button
+            onClick={() => {
+              const end = aboutRef.current.value.length;
+              aboutRef.current.setSelectionRange(end, end);
+              aboutRef.current.focus();
+
+              if (isEdit) submitEdit();
+
+              setIsEdit((prev) => !prev);
+            }}
+            className=" self-end "
+          >
+            {isEdit ? (
+              <TiTickOutline color="green" size={16} />
+            ) : (
+              <AiOutlineEdit size={16} />
+            )}
+          </button>
         </div>
-        {/* <hr className="mt-8" /> */}
-        {/* <div className="flex p-4">
-          <div className="w-1/2 text-center">
-            <span className="font-bold">1.8 k</span> Followers
-          </div>
-          <div className="w-0 border border-gray-300"></div>
-          <div className="w-1/2 text-center">
-            <span className="font-bold">2.0 k</span> Following
-          </div>
-        </div> */}
       </div>
-      {/* </div> */}
     </>
   );
 };

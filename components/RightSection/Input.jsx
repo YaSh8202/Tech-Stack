@@ -37,27 +37,33 @@ const Input = () => {
 
     try {
       if (selectedGroup.id === "open-ai") {
-        const toastId = toast.loading("Thinking...");
-
-        const response = await getResponse(message);
-
-        setOpenAIMessages((prev) => [
-          ...prev,
+        const newMessages = [
           {
             id: Math.random(),
             text: message,
             senderId: user.uid,
             createdAt: new Date(),
           },
-          {
-            id: Math.random(),
-            text: response,
-            senderId: "open-ai",
-            createdAt: new Date(),
-          },
-        ]);
+        ];
+        setOpenAIMessages((prev) => [...prev, ...newMessages]);
+
+        const toastId = toast.loading("Thinking...");
+
+        const response = await getResponse(message);
+        newMessages.push({
+          id: Math.random(),
+          text: response,
+          senderId: "open-ai",
+          createdAt: new Date(),
+        });
+        setOpenAIMessages((prev) => [...prev, newMessages[1]]);
         toast.success("Done!", { id: toastId });
-        setMessage("");
+
+        const prevMessages = JSON.parse(localStorage.getItem("openAI")) || [];
+        localStorage.setItem(
+          "openAI",
+          JSON.stringify([...prevMessages, ...newMessages])
+        );
 
         return;
       }

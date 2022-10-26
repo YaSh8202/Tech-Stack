@@ -27,10 +27,6 @@ const GroupList = ({ keyword }) => {
       flipKey={`${filteredGroups?.map((group) => group.id).join("-")}`}
       className="w-full flex-1 mt-3 flex flex-col gap-3 overflow-y-scroll scrollbar-hide "
     >
-      {/* <Group
-        key="open-ai"
-        group={{ id: "open-ai", name: "Ask a Question", image: "/openAI.png" }}
-      /> */}
       {filteredGroups?.map((group) => (
         <Group key={group.id} group={group} />
       ))}

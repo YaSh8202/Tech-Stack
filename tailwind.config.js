@@ -38,14 +38,24 @@ module.exports = {
             transform: "scale(1)",
           },
         },
+        wiggle: {
+          "0%, 100%": { transform: "rotate(-3deg)" },
+          "50%": { transform: "rotate(3deg)" },
+        },
       },
       animation: {
-        scaleFocus: "scaleFocus 1.5s ease-in-out",
+        scaleFocus: "scaleFocus 1s ease-in-out",
+        wiggle: "wiggle 200ms ease-in-out",
       },
     },
   },
   plugins: [
     require("tailwind-scrollbar-hide"),
     require("tailwindcss-tooltip-arrow-after")(),
+
+    function ({ addVariant }) {
+      addVariant("child", "& > *");
+      addVariant("child-hover", "& > *:hover");
+    },
   ],
 };

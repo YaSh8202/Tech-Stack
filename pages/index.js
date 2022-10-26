@@ -9,7 +9,7 @@ import { GroupContext } from "../lib/groupContext";
 export default function Home({}) {
   const { showSearchBar } = useContext(GroupContext);
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-row min-w-full  ">
+    <div className="h-screen w-screen overflow-hidden flex flex-row   ">
       <Head>
         <title>Tech Stack</title>
       </Head>

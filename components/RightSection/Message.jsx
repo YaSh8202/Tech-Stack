@@ -11,6 +11,7 @@ import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
 import styles from "../styles.module.css";
 import markdownItIns from "markdown-it-ins";
+import { GroupContext } from "../../lib/groupContext";
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -19,6 +20,7 @@ const renderText = (txt) =>
   txt.split(" ").map((part) =>
     URL_REGEX.test(part) ? (
       <a
+        key={part}
         target={"_blank"}
         rel="noopener noreferrer"
         className="underline text-blue-700"
@@ -36,6 +38,7 @@ mdParser.use(markdownItIns);
 const Message = ({ message }) => {
   const [sender, setSender] = useState(null);
   const { username } = useContext(UserContext);
+  const { selectedGroup } = useContext(GroupContext);
   const isSender = username === sender?.username;
   let createdAt = null;
   try {
@@ -53,6 +56,11 @@ const Message = ({ message }) => {
           });
   } catch (err) {
     console.log(err);
+    createdAt = new Date(message?.createdAt).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
   }
 
   useEffect(() => {
@@ -76,11 +84,23 @@ const Message = ({ message }) => {
   if (!message) {
     return null;
   }
+  if (message?.repliedTo)
+    console.log(
+      getDoc(
+        doc(
+          collection(
+            doc(collection(firestore, "Groups"), selectedGroup.id),
+            "messages"
+          ),
+          message?.repliedTo
+        )
+      )
+    );
 
   return (
     <div
       id={message.id}
-      className={` max-w-[90vw] border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[10rem] ${
+      className={` max-w-[80%] border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[8rem] ${
         isSender
           ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
           : "bg-white mr-auto ml-1 rounded-tl-none message-arrow-left "
