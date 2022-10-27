@@ -5,7 +5,7 @@ import { firestore } from "../../lib/firebase";
 import { GroupContext } from "../../lib/groupContext";
 import { UserContext } from "../../lib/userContext";
 
-const SearchMessage = ({ message }) => {
+const SearchMessage = ({ message, inputType }) => {
   const [sender, setSender] = useState(null);
   const { username } = useContext(UserContext);
   const { setShowSearchBar } = useContext(GroupContext);
@@ -66,13 +66,15 @@ const SearchMessage = ({ message }) => {
           msg?.classList.remove("animate-scaleFocus");
         }, 1000);
       }}
-      className="flex flex-col px-3 py-2 box-border w-full bg-gray-100 rounded cursor-pointer hover:scale-[1.02] hover:shadow  duration-150  "
+      className={`flex flex-col px-3 py-2 box-border w-full bg-gray-100 rounded cursor-pointer {${
+        inputType ? "hover:scale-[1.02]" : ""
+      } hover:shadow  duration-150  `}
     >
       <p className="text-xs text-gray-600"> {createdAt}</p>
       <div className="flex flex-row items-center">
         <p className="text-sm text-gray-600 underline">@{sender?.username}</p>
         <p className="ml-2 text-sm text-gray-700 font-medium w-min flex-1 truncate ">
-          {message?.text}
+          {message?.isMarkdown ? "Markdown" : message?.text}
         </p>
       </div>
     </div>
