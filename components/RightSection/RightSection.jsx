@@ -18,7 +18,9 @@ const RightSection = () => {
       {selectedGroup ? (
         <>
           <Header />
-          <ChatBox />
+          <React.Suspense fallback={<p className="text-2xl" >Loading...</p>}  >
+            {<ChatBox />}
+          </React.Suspense>
           <Input />
         </>
       ) : (
