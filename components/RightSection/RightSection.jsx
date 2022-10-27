@@ -21,7 +21,11 @@ const RightSection = () => {
           <ChatBox />
           <Input />
         </>
-      ) : null}
+      ) : (
+        <div className="w-full h-full grid place-content-center ">
+          <h2 className="text-3xl text-gray-400  truncate ">Select a group</h2>
+        </div>
+      )}
     </section>
   );
 };

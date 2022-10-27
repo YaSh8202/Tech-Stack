@@ -9,9 +9,9 @@ import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
 import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
-import styles from "../styles.module.css";
 import markdownItIns from "markdown-it-ins";
 import { GroupContext } from "../../lib/groupContext";
+import { GoReply } from "react-icons/go";
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -35,10 +35,20 @@ const renderText = (txt) =>
 
 const mdParser = new MarkdownIt();
 mdParser.use(markdownItIns);
+
+const getUser = async (userId) => {
+  if (!userId) return null; ;
+
+  const senderRef = doc(collection(firestore, "users"), userId);
+  const senderDoc = await getDoc(senderRef);
+  return senderDoc.data();
+};
+
 const Message = ({ message }) => {
   const [sender, setSender] = useState(null);
   const { username } = useContext(UserContext);
-  const { selectedGroup } = useContext(GroupContext);
+  const { selectedGroup, setSelectedMessage } = useContext(GroupContext);
+  const [linkedMessage, setLinkedMessage] = useState(null);
   const isSender = username === sender?.username;
   let createdAt = null;
   try {
@@ -69,11 +79,30 @@ const Message = ({ message }) => {
     }
 
     const getSender = async () => {
-      const senderRef = doc(collection(firestore, "users"), message.senderId);
-      const senderDoc = await getDoc(senderRef);
-      setSender(senderDoc.data());
+      const senderData = await getUser(message?.senderId);
+      setSender(senderData);
     };
+
+    const getLinkedMessage = async () => {
+      if (!message?.repliedTo) return;
+
+      const data = await getDoc(
+        doc(
+          collection(
+            doc(collection(firestore, "Groups"), selectedGroup?.id),
+            "messages"
+          ),
+          message?.repliedTo
+        )
+      );
+
+      const msg = data.data();
+      const senderData = await getUser(msg?.senderId);
+      setLinkedMessage({ ...msg, sender: senderData });
+    };
+
     getSender();
+    getLinkedMessage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -84,18 +113,10 @@ const Message = ({ message }) => {
   if (!message) {
     return null;
   }
-  if (message?.repliedTo)
-    console.log(
-      getDoc(
-        doc(
-          collection(
-            doc(collection(firestore, "Groups"), selectedGroup.id),
-            "messages"
-          ),
-          message?.repliedTo
-        )
-      )
-    );
+
+  const handleReply = () => {
+    setSelectedMessage(message);
+  };
 
   return (
     <div
@@ -107,6 +128,7 @@ const Message = ({ message }) => {
       } `}
     >
       {/* header containing usernmae and time */}
+
       <div className="flex flex-row items-center justify-between  ">
         <div
           data-html={true}
@@ -130,8 +152,42 @@ const Message = ({ message }) => {
         >
           {sender?.username}
         </div>
-        <div className="text-[10px]">{createdAt}</div>
+        <div className="flex items-center  ">
+          <button onClick={handleReply}>
+            <GoReply className="text-gray-600" />
+          </button>
+          <div className="text-[10px] ml-2 ">{createdAt}</div>
+        </div>
       </div>
+      {/* Header ends */}
+      {linkedMessage && (
+        <div
+          onClick={() => {
+            const msg = document.getElementById(linkedMessage.id);
+            msg?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+              inline: "nearest",
+            });
+            msg?.classList.add("animate-scaleFocus");
+            setTimeout(() => {
+              msg?.classList.remove("animate-scaleFocus");
+            }, 1000);
+          }}
+          className="bg-gray-100 py-2 px-1 text-xs rounded cursor-pointer "
+        >
+          <div>
+            <h4 className="underline">@{linkedMessage.sender?.username}</h4>
+            {linkedMessage.isMarkdown ? (
+              <p>Markdown</p>
+            ) : (
+              <p className="truncate w-full">{linkedMessage?.text}</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* message body */}
       <div className="text-xs overflow-hidden w-full ">
         {message.isMarkdown ? (
           // if message is markdown

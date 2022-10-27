@@ -16,6 +16,7 @@ const ChatBox = () => {
   const { messages } = useContext(GroupContext);
   return (
     <ScrollableFeed
+      // forceScroll={true}
       id="messages"
       className="flex flex-col mt-2 gap-2 flex-1 w-full px-2 md:px-6  overflow-auto overflow-y-scroll scrollbar-hide  "
     >

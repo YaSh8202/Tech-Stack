@@ -2,10 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import Group from "./Group";
 import { GroupContext } from "../lib/groupContext";
 import { Flipped, Flipper } from "react-flip-toolkit";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { firestore, postToJSON } from "../lib/firebase";
 
 const GroupList = ({ keyword }) => {
-  const { groups } = useContext(GroupContext);
+  const [groups, setGroups] = useState([]);
   const [filteredGroups, setFilteredGroups] = useState(groups);
+
+  useEffect(() => {
+    const groupsQuery = query(
+      collection(firestore, "Groups"),
+      orderBy("updatedAt", "desc")
+    );
+    const unsubscribe = onSnapshot(groupsQuery, (snapshot) => {
+      const groups = snapshot.docs.map(postToJSON);
+      setGroups(groups);
+    });
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     if (!keyword || keyword === "") {

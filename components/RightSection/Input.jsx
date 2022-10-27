@@ -17,12 +17,15 @@ import { UserContext } from "../../lib/userContext";
 import { getResponse } from "../../lib/openai";
 import MarkdownModal from "../Modals/MarkdownModal";
 import { toast } from "react-hot-toast";
+import Message from "./Message";
+import SearchMessage from "../SearchSideBar/SearchMessage";
 
 const Input = () => {
   const [showEmojis, setShowEmojis] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
-  const { selectedGroup, setOpenAIMessages } = useContext(GroupContext);
+  const { selectedGroup, setMessages, selectedMessage, setSelectedMessage } =
+    useContext(GroupContext);
   const { user, username, setUserModal } = useContext(UserContext);
   const inputRef = useRef(null);
 
@@ -45,7 +48,7 @@ const Input = () => {
             createdAt: new Date(),
           },
         ];
-        setOpenAIMessages((prev) => [...prev, ...newMessages]);
+        setMessages((prev) => [...prev, ...newMessages]);
 
         const toastId = toast.loading("Thinking...");
 
@@ -56,7 +59,7 @@ const Input = () => {
           senderId: "open-ai",
           createdAt: new Date(),
         });
-        setOpenAIMessages((prev) => [...prev, newMessages[1]]);
+        setMessages((prev) => [...prev, newMessages[1]]);
         toast.success("Done!", { id: toastId });
 
         const prevMessages = JSON.parse(localStorage.getItem("openAI")) || [];
@@ -88,6 +91,7 @@ const Input = () => {
               senderId: auth.currentUser.uid,
               img: downloadURL,
               isMarkdown: false,
+              repliedTo: !!selectedMessage ? selectedMessage.id : "",
             });
           });
         });
@@ -98,6 +102,7 @@ const Input = () => {
           createdAt: serverTimestamp(),
           senderId: auth.currentUser.uid,
           isMarkdown: false,
+          repliedTo: selectedMessage ? selectedMessage.id : "",
         });
       }
 
@@ -109,74 +114,86 @@ const Input = () => {
       });
 
       toast.success("Message sent!", { id: toastId });
+      setSelectedMessage(null);
     } catch (err) {
       console.log(err);
     }
 
     setFile(null);
   };
-
   return (
-    <div className=" flex flex-row-reverse md:flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
-      {selectedGroup?.id !== "open-ai" && (
-        <>
-          <button
-            disabled={!user || selectedGroup.id === "open-ai"}
-            onClick={() => {
-              setShowEmojis((prev) => !prev);
-              inputRef.current.focus();
-            }}
-          >
-            {showEmojis ? (
-              <AiOutlineCloseCircle size={24} />
-            ) : (
-              <BsEmojiLaughing size={24} />
-            )}
-          </button>
-
-          <label className="cursor-pointer">
-            <PlusIcon size={24} />
-            <input
-              onChange={(e) => {
-                setFile(e.target.files[0]);
-              }}
-              className="hidden"
-              type="file"
-              name="file"
-              disabled={!user || selectedGroup.id === "open-ai"}
-            />
-          </label>
-          <MarkdownModal disabled={!user || selectedGroup.id === "open-ai"}>
-            <BsMarkdown size={24} />
-          </MarkdownModal>
-        </>
-      )}
-      <form className="flex-1 relative " onSubmit={submitHandler}>
-        <input
-          ref={inputRef}
-          id="message"
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder={!user ? "Please Login..." : "Say Something..."}
-          className="h-12 w-full bg-white rounded-full  border outline-none lg:mx-2 px-5 py-1 disabled:opacity-50 "
-          disabled={!selectedGroup || !user || !username}
-          onClick={() => {
-            if (!username) {
-              setUserModal(true);
-            }
-          }}
-        />
-        {showEmojis && (
-          <div className="absolute left-0 md:left-[-8rem] bottom-16 ">
-            <EmojiPicker
-              autoFocusSearch={false}
-              onEmojiClick={emojiClickHandler}
-            />
+    <div className="w-full  flex flex-col items-start">
+      {selectedMessage && (
+        <div className="bg-gray-200 flex  w-full px-4 py-2  ">
+          <div className="   ml-auto  max-h-[6rem] overflow-y-auto overflow-x-hidden ">
+            <SearchMessage inputType={true} message={selectedMessage} />
           </div>
+          <button className="ml-3" onClick={() => setSelectedMessage(null)}>
+            <AiOutlineCloseCircle size={20} />
+          </button>
+        </div>
+      )}
+      <div className=" flex flex-row-reverse md:flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
+        {selectedGroup?.id !== "open-ai" && (
+          <>
+            <button
+              disabled={!user || selectedGroup.id === "open-ai"}
+              onClick={() => {
+                setShowEmojis((prev) => !prev);
+                inputRef.current.focus();
+              }}
+            >
+              {showEmojis ? (
+                <AiOutlineCloseCircle size={24} />
+              ) : (
+                <BsEmojiLaughing size={24} />
+              )}
+            </button>
+
+            <label className="cursor-pointer">
+              <PlusIcon size={24} />
+              <input
+                onChange={(e) => {
+                  setFile(e.target.files[0]);
+                }}
+                className="hidden"
+                type="file"
+                name="file"
+                disabled={!user || selectedGroup.id === "open-ai"}
+              />
+            </label>
+            <MarkdownModal disabled={!user || selectedGroup.id === "open-ai"}>
+              <BsMarkdown size={24} />
+            </MarkdownModal>
+          </>
         )}
-        <button type="submit" className="hidden" />
-      </form>
+        <form className="flex-1 relative " onSubmit={submitHandler}>
+          <input
+            ref={inputRef}
+            id="message"
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder={!user ? "Please Login..." : "Say Something..."}
+            className="h-12 w-full bg-white rounded-full  border outline-none lg:mx-2 px-5 py-1 disabled:opacity-50 "
+            disabled={!selectedGroup || !user || !username}
+            onClick={() => {
+              if (!username) {
+                setUserModal(true);
+              }
+            }}
+          />
+          {showEmojis && (
+            <div className="absolute left-0 md:left-[-8rem] bottom-16 ">
+              <EmojiPicker
+                autoFocusSearch={false}
+                onEmojiClick={emojiClickHandler}
+              />
+            </div>
+          )}
+          <button type="submit" className="hidden" />
+        </form>
+      </div>
     </div>
   );
 };
