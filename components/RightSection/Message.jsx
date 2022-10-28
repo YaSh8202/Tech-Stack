@@ -12,6 +12,7 @@ import ReactDOMServer from "react-dom/server";
 import markdownItIns from "markdown-it-ins";
 import { GroupContext } from "../../lib/groupContext";
 import { GoReply } from "react-icons/go";
+import SearchMessage from "../SearchSideBar/SearchMessage";
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -36,19 +37,12 @@ const renderText = (txt) =>
 const mdParser = new MarkdownIt();
 mdParser.use(markdownItIns);
 
-const getUser = async (userId) => {
-  if (!userId) return null; ;
 
-  const senderRef = doc(collection(firestore, "users"), userId);
-  const senderDoc = await getDoc(senderRef);
-  return senderDoc.data();
-};
-
-const Message = ({ message }) => {
-  const [sender, setSender] = useState(null);
+const Message = ({ message, linkedMessage }) => {
+  // const [sender, setSender] = useState(null);
+  const sender = message?.sender;
   const { username } = useContext(UserContext);
-  const { selectedGroup, setSelectedMessage } = useContext(GroupContext);
-  const [linkedMessage, setLinkedMessage] = useState(null);
+  const { setSelectedMessage } = useContext(GroupContext);
   const isSender = username === sender?.username;
   let createdAt = null;
   try {
@@ -73,39 +67,6 @@ const Message = ({ message }) => {
     });
   }
 
-  useEffect(() => {
-    if (message?.senderId === "open-ai") {
-      return;
-    }
-
-    const getSender = async () => {
-      const senderData = await getUser(message?.senderId);
-      setSender(senderData);
-    };
-
-    const getLinkedMessage = async () => {
-      if (!message?.repliedTo) return;
-
-      const data = await getDoc(
-        doc(
-          collection(
-            doc(collection(firestore, "Groups"), selectedGroup?.id),
-            "messages"
-          ),
-          message?.repliedTo
-        )
-      );
-
-      const msg = data.data();
-      const senderData = await getUser(msg?.senderId);
-      setLinkedMessage({ ...msg, sender: senderData });
-    };
-
-    getSender();
-    getLinkedMessage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   function renderHTML(text) {
     return mdParser.render(text);
   }
@@ -118,10 +79,11 @@ const Message = ({ message }) => {
     setSelectedMessage(message);
   };
 
+  
   return (
     <div
       id={message.id}
-      className={` max-w-[80%] border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[8rem] ${
+      className={` max-w-[70%] w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[8rem] ${
         isSender
           ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
           : "bg-white mr-auto ml-1 rounded-tl-none message-arrow-left "
@@ -161,34 +123,13 @@ const Message = ({ message }) => {
       </div>
       {/* Header ends */}
       {linkedMessage && (
-        <div
-          onClick={() => {
-            const msg = document.getElementById(linkedMessage.id);
-            msg?.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-              inline: "nearest",
-            });
-            msg?.classList.add("animate-scaleFocus");
-            setTimeout(() => {
-              msg?.classList.remove("animate-scaleFocus");
-            }, 1000);
-          }}
-          className="bg-gray-100 py-2 px-1 text-xs rounded cursor-pointer "
-        >
-          <div>
-            <h4 className="underline">@{linkedMessage.sender?.username}</h4>
-            {linkedMessage.isMarkdown ? (
-              <p>Markdown</p>
-            ) : (
-              <p className="truncate w-full">{linkedMessage?.text}</p>
-            )}
-          </div>
+        <div className="block min-w-full max-w-[15rem] " >
+          <SearchMessage message={linkedMessage} />
         </div>
       )}
 
       {/* message body */}
-      <div className="text-xs overflow-hidden w-full ">
+      <div className="ml-auto ">
         {message.isMarkdown ? (
           // if message is markdown
           <MdEditor

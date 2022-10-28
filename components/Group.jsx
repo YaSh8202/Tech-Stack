@@ -11,7 +11,7 @@ const Group = ({ group }) => {
   const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
   const { image, name, lastMessage, updatedAt } = group;
   return (
-    <Flipped flipId={group.id}>
+    <Flipped flipId={group.id} c >
       <Ripples>
         <div
           onClick={() => {
@@ -44,22 +44,21 @@ const Group = ({ group }) => {
                 </p>
               )}
             </div>
-            {updatedAt && (
-              <p className="text-xs flex-1 w-full  text-gray-500 truncate ">
-                {["Markdown", "Image"].includes(lastMessage?.text) ? (
-                  <p className="flex gap-1 items-center ">
-                    {lastMessage?.text === "Markdown" ? (
-                      <BsMarkdown size={16} />
-                    ) : (
-                      <BiImageAlt size={16} />
-                    )}{" "}
-                    {lastMessage?.text}
-                  </p>
-                ) : (
-                  lastMessage?.text
-                )}
-              </p>
-            )}
+
+            <div className="text-xs overflow-hidden text-gray-500 w-full ">
+              {["Markdown", "Image"].includes(lastMessage?.text) ? (
+                <p className="flex gap-1 items-center ">
+                  {lastMessage?.text === "Markdown" ? (
+                    <BsMarkdown size={16} />
+                  ) : (
+                    <BiImageAlt size={16} />
+                  )}{" "}
+                  {lastMessage?.text}
+                </p>
+              ) : (
+                <p className="truncate w-full "> {lastMessage?.text}</p>
+              )}
+            </div>
           </div>
         </div>
       </Ripples>

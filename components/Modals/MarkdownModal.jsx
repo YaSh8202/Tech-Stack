@@ -18,6 +18,7 @@ import {
 import { auth, firestore } from "../../lib/firebase";
 import { toast } from "react-hot-toast";
 import markdownItIns from "markdown-it-ins";
+import { UserContext } from "../../lib/userContext";
 
 function onImageUpload(file) {
   return new Promise((resolve) => {
@@ -33,7 +34,9 @@ const mdParser = new MarkdownIt(/* Markdown-it options */);
 mdParser.use(markdownItIns);
 const MarkdownModal = ({ children }) => {
   const [showModal, setShowModal] = React.useState(false);
-  const { markdown, setMarkdown, selectedGroup } = useContext(GroupContext);
+  const { markdown, setMarkdown, selectedGroup, selectedMessage } =
+    useContext(GroupContext);
+  const { username, user } = useContext(UserContext);
 
   function handleEditorChange({ html, text }) {
     // console.log("handleEditorChange", text);
@@ -56,8 +59,14 @@ const MarkdownModal = ({ children }) => {
         id: messageId,
         text: markdown,
         createdAt: serverTimestamp(),
-        senderId: auth.currentUser.uid,
         isMarkdown: true,
+        sender: {
+          id: user.uid,
+          username: username,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        },
+        repliedTo: selectedMessage ? selectedMessage.id : "",
       });
       await updateDoc(doc(firestore, "Groups", selectedGroup?.id), {
         lastMessage: {

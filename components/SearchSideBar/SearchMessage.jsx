@@ -6,7 +6,8 @@ import { GroupContext } from "../../lib/groupContext";
 import { UserContext } from "../../lib/userContext";
 
 const SearchMessage = ({ message, inputType }) => {
-  const [sender, setSender] = useState(null);
+  
+  const sender = message?.sender;
   const { username } = useContext(UserContext);
   const { setShowSearchBar } = useContext(GroupContext);
   const isSender = username === sender?.username;
@@ -33,20 +34,6 @@ const SearchMessage = ({ message, inputType }) => {
   } catch (err) {
     console.log(err);
   }
-
-  useEffect(() => {
-    if (message?.senderId === "open-ai") {
-      return;
-    }
-
-    const getSender = async () => {
-      const senderRef = doc(collection(firestore, "users"), message.senderId);
-      const senderDoc = await getDoc(senderRef);
-      setSender(senderDoc.data());
-    };
-    getSender();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div

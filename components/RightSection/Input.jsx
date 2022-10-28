@@ -44,8 +44,9 @@ const Input = () => {
           {
             id: Math.random(),
             text: message,
-            senderId: user.uid,
-            createdAt: new Date(),
+            sender: {
+              id: user.uid,
+            },
           },
         ];
         setMessages((prev) => [...prev, ...newMessages]);
@@ -56,8 +57,9 @@ const Input = () => {
         newMessages.push({
           id: Math.random(),
           text: response,
-          senderId: "open-ai",
-          createdAt: new Date(),
+          sender: {
+            id: "open-ai",
+          },
         });
         setMessages((prev) => [...prev, newMessages[1]]);
         toast.success("Done!", { id: toastId });
@@ -81,6 +83,7 @@ const Input = () => {
         ),
         messageId
       );
+
       if (file) {
         uploadBytesResumable(storageRef, file).then(() => {
           getDownloadURL(storageRef).then(async (downloadURL) => {
@@ -88,10 +91,15 @@ const Input = () => {
               id: messageId,
               text: message,
               createdAt: serverTimestamp(),
-              senderId: auth.currentUser.uid,
+              sender: {
+                id: auth.currentUser.uid,
+                username,
+                photoURL: user.photoURL,
+                displayName: user.displayName,
+              },
               img: downloadURL,
               isMarkdown: false,
-              repliedTo: !!selectedMessage ? selectedMessage.id : "",
+              repliedTo: selectedMessage ? selectedMessage.id : "",
             });
           });
         });
@@ -100,9 +108,14 @@ const Input = () => {
           id: messageId,
           text: message,
           createdAt: serverTimestamp(),
-          senderId: auth.currentUser.uid,
           isMarkdown: false,
           repliedTo: selectedMessage ? selectedMessage.id : "",
+          sender: {
+            id: auth.currentUser.uid,
+            username,
+            photoURL: user.photoURL,
+            displayName: user.displayName,
+          },
         });
       }
 

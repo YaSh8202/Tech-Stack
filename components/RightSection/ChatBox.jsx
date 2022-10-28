@@ -1,42 +1,56 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-} from "firebase/firestore";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { firestore, postToJSON } from "../../lib/firebase";
 import { GroupContext } from "../../lib/groupContext";
 import Message from "./Message";
 import ScrollableFeed from "react-scrollable-feed";
+import Lottie from "react-lottie";
+import animationData from "../../lib/lotties/messageLoading.json";
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 
 const ChatBox = () => {
-  const { messages } = useContext(GroupContext);
-  const [isBottom, setIsBottom] = useState(false);
+  const { messages, selectedGroup, loading } = useContext(GroupContext);
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    setTimeout(() => {
+    const interval = setTimeout(() => {
       scrollRef.current?.scrollToBottom({
         behavior: "smooth",
       });
     }, 100);
-  }, [messages]);
 
-  console.log(isBottom);
+    return () => clearTimeout(interval);
+  }, [loading, messages]);
+
+  console.log(loading);
+
   return (
     <ScrollableFeed
-      ref={scrollRef}
       id="messages"
-      onScroll={(isAtBottom) => setIsBottom(isAtBottom)}
+      ref={scrollRef}
       className="flex flex-col mt-2 gap-2 flex-1 w-full px-2 md:px-6  overflow-y-scroll scrollbar-hide   "
     >
-      {messages &&
-        messages.map((message, i) => (
-          <Message key={message.id} message={message} />
-        ))}
+      {loading || !messages ? (
+        <Lottie options={defaultOptions} height={400} width={400} />
+      ) : (
+        <>
+          {messages.map((message, i) => (
+            <Message
+              key={message.id}
+              message={message}
+              linkedMessage={messages.find((m) => {
+                return m.id === message.repliedTo;
+              })}
+            />
+          ))}
+        </>
+      )}
     </ScrollableFeed>
   );
 };

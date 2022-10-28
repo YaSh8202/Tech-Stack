@@ -3,24 +3,20 @@ import Header from "./Header";
 import { GroupContext } from "../../lib/groupContext";
 import ChatBox from "./ChatBox";
 import Input from "./Input";
-import LoginModal from "../Modals/LoginModal";
 
 const RightSection = () => {
   const { selectedGroup } = useContext(GroupContext);
-  // if (!selectedGroup) return null;
 
   return (
     <section
-      className={` flex-col flex-[3] overflow-auto ${
+      className={`flex flex-col justify-between flex-[3] overflow-auto ${
         !selectedGroup ? "hidden md:flex " : "flex"
       } `}
     >
       {selectedGroup ? (
         <>
           <Header />
-          <React.Suspense fallback={<p className="text-2xl" >Loading...</p>}  >
-            {<ChatBox />}
-          </React.Suspense>
+          <ChatBox />
           <Input />
         </>
       ) : (
