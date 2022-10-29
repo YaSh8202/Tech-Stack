@@ -37,8 +37,7 @@ const renderText = (txt) =>
 const mdParser = new MarkdownIt();
 mdParser.use(markdownItIns);
 
-
-const Message = ({ message, linkedMessage }) => {
+const Message = ({ message, linkedMessage, needHeader }) => {
   // const [sender, setSender] = useState(null);
   const sender = message?.sender;
   const { username } = useContext(UserContext);
@@ -52,11 +51,15 @@ const Message = ({ message, linkedMessage }) => {
             hour: "2-digit",
             minute: "2-digit",
             hour12: false,
+            day: "numeric",
+            month: "short",
           })
         : message.createdAt?.toDate()?.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
             hour12: false,
+            day: "numeric",
+            month: "short",
           });
   } catch (err) {
     console.log(err);
@@ -79,11 +82,10 @@ const Message = ({ message, linkedMessage }) => {
     setSelectedMessage(message);
   };
 
-  
   return (
     <div
       id={message.id}
-      className={` max-w-[70%] w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[8rem] ${
+      className={` max-w-[70%] w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[9rem] ${
         isSender
           ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
           : "bg-white mr-auto ml-1 rounded-tl-none message-arrow-left "
@@ -116,14 +118,14 @@ const Message = ({ message, linkedMessage }) => {
         </div>
         <div className="flex items-center  ">
           <button onClick={handleReply}>
-            <GoReply className="text-gray-600" />
+            <GoReply size={11} className="text-gray-600" />
           </button>
           <div className="text-[10px] ml-2 ">{createdAt}</div>
         </div>
       </div>
       {/* Header ends */}
       {linkedMessage && (
-        <div className="block min-w-full max-w-[15rem] " >
+        <div className="block min-w-full max-w-[15rem] ">
           <SearchMessage message={linkedMessage} />
         </div>
       )}
