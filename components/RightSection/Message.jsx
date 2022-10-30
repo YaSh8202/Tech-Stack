@@ -1,8 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-import { collection, doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
-import React, { useContext, useEffect, useState } from "react";
-import { firestore } from "../../lib/firebase";
+import React, { useContext, useEffect, useRef } from "react";
 import { UserContext } from "../../lib/userContext";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
@@ -13,6 +10,9 @@ import markdownItIns from "markdown-it-ins";
 import { GroupContext } from "../../lib/groupContext";
 import { GoReply } from "react-icons/go";
 import SearchMessage from "../SearchSideBar/SearchMessage";
+import { HiDownload } from "react-icons/hi";
+import { storage } from "../../lib/firebase";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -43,6 +43,8 @@ const Message = ({ message, linkedMessage, needHeader }) => {
   const { username } = useContext(UserContext);
   const { setSelectedMessage } = useContext(GroupContext);
   const isSender = username === sender?.username;
+  const downloadBtn = useRef(null);
+
   let createdAt = null;
   try {
     createdAt =
@@ -69,6 +71,36 @@ const Message = ({ message, linkedMessage, needHeader }) => {
       hour12: false,
     });
   }
+
+  useEffect(() => {
+    if (!message.img) return;
+
+    const imageRef = ref(storage, message.img);
+
+    getDownloadURL(imageRef)
+      .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+
+        // This can be downloaded directly:
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = "blob";
+        xhr.onload = (event) => {
+          const blob = xhr.response;
+          console.log(blob);
+          const URL = window.URL.createObjectURL(blob);
+          downloadBtn.current.href = URL;
+          downloadBtn.current.download = imageRef.name;
+        };
+        xhr.open("GET", url);
+        xhr.send();
+
+        console.log(url);
+      })
+      .catch((error) => {
+        // Handle any errors
+        console.log(error);
+      });
+  }, []);
 
   function renderHTML(text) {
     return mdParser.render(text);
@@ -144,14 +176,23 @@ const Message = ({ message, linkedMessage, needHeader }) => {
         ) : (
           <div className="flex flex-col gap-2  py-1  ">
             {message.img && (
-              <div className="relative w-80 h-64 ">
+              <div className="relative w-80  group  ">
                 <Image
-                  layout="fill"
+                  layout="responsive"
                   src={message.img}
                   alt="message"
                   className="rounded-md"
                   objectFit="cover"
+                  width={750}
+                  height={450}
                 />
+                <a
+                  id="download"
+                  ref={downloadBtn}
+                  className="absolute bottom-1 right-1 invisible group-hover:visible duration-150 p-1 rounded-full bg-gray-100 "
+                >
+                  <HiDownload className="text-gray-500  " size={16} />
+                </a>
               </div>
             )}
             {message.text && (

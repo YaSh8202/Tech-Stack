@@ -29,7 +29,7 @@ const Header = () => {
           onClick={() => {
             setShowSearchBar((prev) => !prev);
           }}
-          className="hover:scale-105 checked:bg-gray-50 rounded-full p-1 "
+          className=" checked:bg-gray-50 rounded-full p-2.5 hover:bg-gray-100 duration-200 "
         >
           <BsSearch className="text-gray-600  " size={18} />
         </button>

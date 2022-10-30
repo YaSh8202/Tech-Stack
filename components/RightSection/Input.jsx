@@ -75,7 +75,6 @@ const Input = () => {
 
       const toastId = toast.loading("Sending message...");
       const messageId = uuid();
-      const storageRef = ref(storage, "images", messageId);
       const messagesRef = doc(
         collection(
           doc(collection(firestore, "Groups"), selectedGroup?.id),
@@ -85,6 +84,7 @@ const Input = () => {
       );
 
       if (file) {
+        const storageRef = ref(storage, `images/${file.name}`);
         uploadBytesResumable(storageRef, file).then(() => {
           getDownloadURL(storageRef).then(async (downloadURL) => {
             await setDoc(messagesRef, {
