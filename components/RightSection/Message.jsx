@@ -73,7 +73,7 @@ const Message = ({ message, linkedMessage, needHeader }) => {
   }
 
   useEffect(() => {
-    if (!message.img) return;
+    if (!message.img || !downloadBtn?.current) return;
 
     const imageRef = ref(storage, message.img);
 
@@ -86,15 +86,15 @@ const Message = ({ message, linkedMessage, needHeader }) => {
         xhr.responseType = "blob";
         xhr.onload = (event) => {
           const blob = xhr.response;
-          console.log(blob);
           const URL = window.URL.createObjectURL(blob);
-          downloadBtn.current.href = URL;
-          downloadBtn.current.download = imageRef.name;
+          if (downloadBtn.current) {
+            downloadBtn.current.href = URL;
+            downloadBtn.current.download = imageRef.name;
+          }
         };
         xhr.open("GET", url);
         xhr.send();
 
-        console.log(url);
       })
       .catch((error) => {
         // Handle any errors
@@ -176,12 +176,12 @@ const Message = ({ message, linkedMessage, needHeader }) => {
         ) : (
           <div className="flex flex-col gap-2  py-1  ">
             {message.img && (
-              <div className="relative w-80  group  ">
+              <div className="relative w-[14rem] md:w-80 max-w-full overflow-hidden  group  ">
                 <Image
                   layout="responsive"
                   src={message.img}
                   alt="message"
-                  className="rounded-md"
+                  className="rounded-md "
                   objectFit="cover"
                   width={750}
                   height={450}
