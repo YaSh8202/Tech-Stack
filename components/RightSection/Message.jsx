@@ -50,14 +50,13 @@ function getReadableFileSizeString(fileSizeInBytes) {
 const Message = ({ message, linkedMessage, needHeader, last }) => {
   // const [sender, setSender] = useState(null);
   const sender = message?.sender;
-  const { username } = useContext(UserContext);
-  const { setSelectedMessage } = useContext(GroupContext);
-  const isSender = username === sender?.username;
+  const { username, user } = useContext(UserContext);
+  const { setSelectedMessage, selectedGroup } = useContext(GroupContext);
+  const isSender = user.uid === sender?.id;
   const downloadBtn = useRef(null);
   // const [file, setFile] = useState({});
   const file = message?.fileMeta;
   const messageRef = useRef(null);
-  console.log(message);
 
   let createdAt = null;
   try {
@@ -81,6 +80,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
       hour12: false,
     });
   }
+  console.log(createdAt, message?.createdAt);
 
   useEffect(() => {
     // const getFile = async () => {
@@ -138,39 +138,41 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
       >
         {/* header containing usernmae and time */}
 
-        <div
-          ref={messageRef}
-          className="flex flex-row items-center justify-between  "
-        >
+        {selectedGroup.id !== "open-ai" && (
           <div
-            data-html={true}
-            data-tip={ReactDOMServer.renderToString(
-              <div className="flex flex-row items-center justify-between px-5 py-3 rounded  ">
-                <img
-                  src={sender?.photoURL}
-                  alt="sender"
-                  className="w-10 h-10 rounded-full"
-                  layout="intrinsic"
-                  width={40}
-                  height={40}
-                />
-                <div className="flex flex-col items-end ml-3 ">
-                  <p>{sender?.displayName}</p>
-                  <p className="text-xs">@{sender?.username}</p>
-                </div>
-              </div>
-            )}
-            className=" text-[#0c453e] text-xs underline cursor-pointer  hover:font-semibold font-medium  "
+            ref={messageRef}
+            className="flex flex-row items-center justify-between  "
           >
-            {sender?.username}
+            <div
+              data-html={true}
+              data-tip={ReactDOMServer.renderToString(
+                <div className="flex flex-row items-center justify-between px-5 py-3 rounded  ">
+                  <img
+                    src={sender?.photoURL}
+                    alt="sender"
+                    className="w-10 h-10 rounded-full"
+                    layout="intrinsic"
+                    width={40}
+                    height={40}
+                  />
+                  <div className="flex flex-col items-end ml-3 ">
+                    <p>{sender?.displayName}</p>
+                    <p className="text-xs">@{sender?.username}</p>
+                  </div>
+                </div>
+              )}
+              className=" text-[#0c453e] text-xs underline cursor-pointer  hover:font-semibold font-medium  "
+            >
+              {sender?.username}
+            </div>
+            <div className="flex items-center  ">
+              <button onClick={handleReply}>
+                <GoReply size={11} className="text-gray-600" />
+              </button>
+              <div className="text-[10px] ml-2 ">{createdAt}</div>
+            </div>
           </div>
-          <div className="flex items-center  ">
-            <button onClick={handleReply}>
-              <GoReply size={11} className="text-gray-600" />
-            </button>
-            <div className="text-[10px] ml-2 ">{createdAt}</div>
-          </div>
-        </div>
+        )}
         {/* Header ends */}
         {linkedMessage && (
           <div className="block min-w-full max-w-[15rem] ">
@@ -195,15 +197,15 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                 <div className="relative  overflow-hidden  group  ">
                   {/* check if file type is of image */}
                   {file?.type?.startsWith("image") ? (
-                    <div className="relative w-[16rem] md:w-80">
+                    <div className="relative w-[16rem] h-[12rem] md:w-80">
                       <Image
-                        layout="responsive"
+                        layout="fill"
                         src={message.img}
                         alt="message"
                         className="rounded-md "
                         objectFit="cover"
-                        width={750}
-                        height={450}
+                        fill
+                        sizes="100vw"
                       />
                     </div>
                   ) : file?.type?.startsWith("video") ? (
@@ -238,6 +240,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                     id="download"
                     ref={downloadBtn}
                     className="absolute bottom-1 right-1 invisible group-hover:visible duration-150 p-1 rounded-full bg-gray-100 "
+                    title={`Download ${file?.name}`}
                   >
                     <HiDownload className="text-gray-500  " size={16} />
                   </a>

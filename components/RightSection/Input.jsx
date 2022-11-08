@@ -46,6 +46,10 @@ const Input = () => {
             sender: {
               id: user.uid,
             },
+            date: new Date()?.toDateString([], {
+              day: "numeric",
+              month: "short",
+            }),
           },
         ];
         setMessages((prev) => [...prev, ...newMessages]);
@@ -59,6 +63,10 @@ const Input = () => {
           sender: {
             id: "open-ai",
           },
+          date: new Date()?.toDateString([], {
+            day: "numeric",
+            month: "short",
+          }),
         });
         setMessages((prev) => [...prev, newMessages[1]]);
         toast.success("Done!", { id: toastId });
@@ -124,7 +132,7 @@ const Input = () => {
 
       await updateDoc(doc(firestore, "Groups", selectedGroup?.id), {
         lastMessage: {
-          text: message.trim() === "" ? "Image" : message,
+          text: message.trim() === "" ? file.type.split("/")[0] : message,
         },
         updatedAt: serverTimestamp(),
       });
@@ -162,12 +170,12 @@ const Input = () => {
               {showEmojis ? (
                 <AiOutlineCloseCircle size={24} />
               ) : (
-                <BsEmojiLaughing size={24} />
+                <BsEmojiLaughing size={24} className="hover:text-green-600" />
               )}
             </button>
 
             <label className="cursor-pointer">
-              <PlusIcon size={24} />
+              <PlusIcon size={24} className="hover:text-green-600" />
               <input
                 onChange={(e) => {
                   setFile(e.target.files[0]);
@@ -179,7 +187,7 @@ const Input = () => {
               />
             </label>
             <MarkdownModal disabled={!user || selectedGroup.id === "open-ai"}>
-              <BsMarkdown size={24} />
+              <BsMarkdown className="hover:text-green-600" size={24} />
             </MarkdownModal>
           </>
         )}
@@ -222,6 +230,7 @@ const PlusIcon = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    className="group"
   >
     <path
       d="M12 8.327v7.326M15.667 11.99H8.333"
@@ -237,6 +246,7 @@ const PlusIcon = (props) => (
       strokeWidth={1.5}
       strokeLinecap="round"
       strokeLinejoin="round"
+      className="group-hover:stroke-green-600"
     />
   </svg>
 );

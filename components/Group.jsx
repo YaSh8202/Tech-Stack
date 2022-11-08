@@ -6,6 +6,9 @@ import { GroupContext } from "../lib/groupContext";
 import { BsMarkdown } from "react-icons/bs";
 import { BiImageAlt } from "react-icons/bi";
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 const Group = ({ group }) => {
   const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
   const { image, name, lastMessage, updatedAt } = group;
@@ -41,14 +44,14 @@ const Group = ({ group }) => {
           </div>
 
           <div className="text-xs overflow-hidden text-gray-500 w-full ">
-            {["Markdown", "Image"].includes(lastMessage?.text) ? (
+            {["Markdown", "Image","video"].includes(lastMessage?.text) ? (
               <p className="flex gap-1 items-center ">
                 {lastMessage?.text === "Markdown" ? (
                   <BsMarkdown size={16} />
                 ) : (
                   <BiImageAlt size={16} />
                 )}{" "}
-                {lastMessage?.text}
+                {capitalizeFirstLetter(lastMessage?.text)}
               </p>
             ) : (
               <p className="truncate max-w-[12rem] "> {lastMessage?.text}</p>
