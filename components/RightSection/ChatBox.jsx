@@ -45,10 +45,8 @@ const ChatBox = () => {
               linkedMessage={messages.find((m) => {
                 return m.id === message.repliedTo;
               })}
-              needHeader={
-                i === 0 ||
-                messages[i - 1].sender.username !== message.sender.username
-              }
+              needHeader={i === 0 || messages[i - 1].date !== message.date}
+              last={i === messages.length - 1}
             />
           ))}
         </>

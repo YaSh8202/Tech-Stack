@@ -17,7 +17,6 @@ import { UserContext } from "../../lib/userContext";
 import { getResponse } from "../../lib/openai";
 import MarkdownModal from "../Modals/MarkdownModal";
 import { toast } from "react-hot-toast";
-import Message from "./Message";
 import SearchMessage from "../SearchSideBar/SearchMessage";
 
 const Input = () => {
@@ -69,7 +68,6 @@ const Input = () => {
           "openAI",
           JSON.stringify([...prevMessages, ...newMessages])
         );
-
         return;
       }
 
@@ -100,6 +98,11 @@ const Input = () => {
               img: downloadURL,
               isMarkdown: false,
               repliedTo: selectedMessage ? selectedMessage.id : "",
+              fileMeta: {
+                name: file.name,
+                size: file.size,
+                type: file.type,
+              },
             });
           });
         });

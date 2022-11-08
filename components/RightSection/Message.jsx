@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../lib/userContext";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
@@ -12,7 +12,8 @@ import { GoReply } from "react-icons/go";
 import SearchMessage from "../SearchSideBar/SearchMessage";
 import { HiDownload } from "react-icons/hi";
 import { storage } from "../../lib/firebase";
-import { getDownloadURL, ref } from "firebase/storage";
+import { getMetadata, ref } from "firebase/storage";
+import { BsFileEarmarkFill } from "react-icons/bs";
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -36,14 +37,27 @@ const renderText = (txt) =>
 
 const mdParser = new MarkdownIt();
 mdParser.use(markdownItIns);
+function getReadableFileSizeString(fileSizeInBytes) {
+  var i = -1;
+  var byteUnits = [" kB", " MB", " GB", " TB", "PB", "EB", "ZB", "YB"];
+  do {
+    fileSizeInBytes /= 1024;
+    i++;
+  } while (fileSizeInBytes > 1024);
 
-const Message = ({ message, linkedMessage, needHeader }) => {
+  return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
+}
+const Message = ({ message, linkedMessage, needHeader, last }) => {
   // const [sender, setSender] = useState(null);
   const sender = message?.sender;
   const { username } = useContext(UserContext);
   const { setSelectedMessage } = useContext(GroupContext);
   const isSender = username === sender?.username;
   const downloadBtn = useRef(null);
+  // const [file, setFile] = useState({});
+  const file = message?.fileMeta;
+  const messageRef = useRef(null);
+  console.log(message);
 
   let createdAt = null;
   try {
@@ -53,15 +67,11 @@ const Message = ({ message, linkedMessage, needHeader }) => {
             hour: "2-digit",
             minute: "2-digit",
             hour12: false,
-            day: "numeric",
-            month: "short",
           })
         : message.createdAt?.toDate()?.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
             hour12: false,
-            day: "numeric",
-            month: "short",
           });
   } catch (err) {
     console.log(err);
@@ -73,33 +83,34 @@ const Message = ({ message, linkedMessage, needHeader }) => {
   }
 
   useEffect(() => {
+    // const getFile = async () => {
+    //   if (message?.img) {
+    //     const metadata = await getMetadata(imageRef);
+    //     setFile({
+    //       name: metadata.name,
+    //       size: metadata.size,
+    //       type: metadata.contentType,
+    //     });
+    //   }
+    // };
+
     if (!message.img || !downloadBtn?.current) return;
 
     const imageRef = ref(storage, message.img);
-
-    getDownloadURL(imageRef)
-      .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-
-        // This can be downloaded directly:
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = "blob";
-        xhr.onload = (event) => {
-          const blob = xhr.response;
-          const URL = window.URL.createObjectURL(blob);
-          if (downloadBtn.current) {
-            downloadBtn.current.href = URL;
-            downloadBtn.current.download = imageRef.name;
-          }
-        };
-        xhr.open("GET", url);
-        xhr.send();
-
-      })
-      .catch((error) => {
-        // Handle any errors
-        console.log(error);
-      });
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "blob";
+    xhr.onload = (event) => {
+      const blob = xhr.response;
+      const URL = window.URL.createObjectURL(blob);
+      if (downloadBtn.current) {
+        downloadBtn.current.href = URL;
+        downloadBtn.current.download = imageRef.name;
+      }
+    };
+    xhr.open("GET", message.img);
+    xhr.send();
+    // getFile();
+    // scroll to bottom if the message is last
   }, []);
 
   function renderHTML(text) {
@@ -115,104 +126,153 @@ const Message = ({ message, linkedMessage, needHeader }) => {
   };
 
   return (
-    <div
-      id={message.id}
-      className={` max-w-[70%] w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[9rem] ${
-        isSender
-          ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
-          : "bg-white mr-auto ml-1 rounded-tl-none message-arrow-left "
-      } `}
-    >
-      {/* header containing usernmae and time */}
+    <>
+      {needHeader && <DateComponent date={message?.date} />}
+      <div
+        id={message.id}
+        className={` max-w-[80%] md:max-w-[70%] w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[9rem] ${
+          isSender
+            ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
+            : "bg-white mr-auto ml-1 rounded-tl-none message-arrow-left "
+        } `}
+      >
+        {/* header containing usernmae and time */}
 
-      <div className="flex flex-row items-center justify-between  ">
         <div
-          data-html={true}
-          data-tip={ReactDOMServer.renderToString(
-            <div className="flex flex-row items-center justify-between px-5 py-3 rounded  ">
-              <img
-                src={sender?.photoURL}
-                alt="sender"
-                className="w-10 h-10 rounded-full"
-                layout="intrinsic"
-                width={40}
-                height={40}
-              />
-              <div className="flex flex-col items-end ml-3 ">
-                <p>{sender?.displayName}</p>
-                <p className="text-xs">@{sender?.username}</p>
-              </div>
-            </div>
-          )}
-          className=" text-[#0c453e] text-xs underline cursor-pointer  hover:font-semibold font-medium  "
+          ref={messageRef}
+          className="flex flex-row items-center justify-between  "
         >
-          {sender?.username}
-        </div>
-        <div className="flex items-center  ">
-          <button onClick={handleReply}>
-            <GoReply size={11} className="text-gray-600" />
-          </button>
-          <div className="text-[10px] ml-2 ">{createdAt}</div>
-        </div>
-      </div>
-      {/* Header ends */}
-      {linkedMessage && (
-        <div className="block min-w-full max-w-[15rem] ">
-          <SearchMessage message={linkedMessage} />
-        </div>
-      )}
-
-      {/* message body */}
-      <div className="ml-auto ">
-        {message.isMarkdown ? (
-          // if message is markdown
-          <MdEditor
-            value={message.text}
-            view={{ menu: false, md: false, html: true }}
-            renderHTML={renderHTML}
-            readOnly
-            plugins={[markdownItIns]}
-          />
-        ) : (
-          <div className="flex flex-col gap-2  py-1  ">
-            {message.img && (
-              <div className="relative w-[14rem] md:w-80 max-w-full overflow-hidden  group  ">
-                <Image
-                  layout="responsive"
-                  src={message.img}
-                  alt="message"
-                  className="rounded-md "
-                  objectFit="cover"
-                  width={750}
-                  height={450}
+          <div
+            data-html={true}
+            data-tip={ReactDOMServer.renderToString(
+              <div className="flex flex-row items-center justify-between px-5 py-3 rounded  ">
+                <img
+                  src={sender?.photoURL}
+                  alt="sender"
+                  className="w-10 h-10 rounded-full"
+                  layout="intrinsic"
+                  width={40}
+                  height={40}
                 />
-                <a
-                  id="download"
-                  ref={downloadBtn}
-                  className="absolute bottom-1 right-1 invisible group-hover:visible duration-150 p-1 rounded-full bg-gray-100 "
-                >
-                  <HiDownload className="text-gray-500  " size={16} />
-                </a>
+                <div className="flex flex-col items-end ml-3 ">
+                  <p>{sender?.displayName}</p>
+                  <p className="text-xs">@{sender?.username}</p>
+                </div>
               </div>
             )}
-            {message.text && (
-              <p className="text-sm whitespace-pre-wrap self-end cl">
-                {renderText(message.text.trim())}
-              </p>
-            )}
+            className=" text-[#0c453e] text-xs underline cursor-pointer  hover:font-semibold font-medium  "
+          >
+            {sender?.username}
+          </div>
+          <div className="flex items-center  ">
+            <button onClick={handleReply}>
+              <GoReply size={11} className="text-gray-600" />
+            </button>
+            <div className="text-[10px] ml-2 ">{createdAt}</div>
+          </div>
+        </div>
+        {/* Header ends */}
+        {linkedMessage && (
+          <div className="block min-w-full max-w-[15rem] ">
+            <SearchMessage message={linkedMessage} />
           </div>
         )}
+
+        {/* message body */}
+        <div className={`${message.isMarkdown ? "ml-auto" : ""}`}>
+          {message.isMarkdown ? (
+            // if message is markdown
+            <MdEditor
+              value={message.text}
+              view={{ menu: false, md: false, html: true }}
+              renderHTML={renderHTML}
+              readOnly
+              plugins={[markdownItIns]}
+            />
+          ) : (
+            <div className="flex flex-col gap-2  py-1  ">
+              {message.img && file && (
+                <div className="relative  overflow-hidden  group  ">
+                  {/* check if file type is of image */}
+                  {file?.type?.startsWith("image") ? (
+                    <div className="relative w-[16rem] md:w-80">
+                      <Image
+                        layout="responsive"
+                        src={message.img}
+                        alt="message"
+                        className="rounded-md "
+                        objectFit="cover"
+                        width={750}
+                        height={450}
+                      />
+                    </div>
+                  ) : file?.type?.startsWith("video") ? (
+                    <div className="w-[18rem] md:w-[21rem]">
+                      <video
+                        src={message.img}
+                        className="rounded-md "
+                        controls
+                        width={750}
+                        height={450}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex flex-row items-center gap-2  rounded-md px-1 py-2 max-w-[12rem]">
+                      <div className="group bg-green-500 hover:text-white rounded-full p-3 border text-white  ">
+                        <BsFileEarmarkFill size={20} className=" " />
+                      </div>
+                      <div className="flex flex-col flex-1 overflow-hidden ">
+                        <p
+                          title={file?.name}
+                          className="text-sm text-gray-600 truncate"
+                        >
+                          {file?.name}
+                        </p>
+                        <p className="text-xs text-gray-500  ">
+                          {getReadableFileSizeString(file?.size)}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  <a
+                    id="download"
+                    ref={downloadBtn}
+                    className="absolute bottom-1 right-1 invisible group-hover:visible duration-150 p-1 rounded-full bg-gray-100 "
+                  >
+                    <HiDownload className="text-gray-500  " size={16} />
+                  </a>
+                </div>
+              )}
+
+              {message.text && (
+                <p className="text-sm whitespace-pre-wrap self-end cl">
+                  {renderText(message.text.trim())}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+        <ReactTooltip
+          padding="0 0"
+          place="top"
+          type="light"
+          effect="solid"
+          borderColor="#e5e7eb"
+          border
+        />
       </div>
-      <ReactTooltip
-        padding="0 0"
-        place="top"
-        type="light"
-        effect="solid"
-        borderColor="#e5e7eb"
-        border
-      />
-    </div>
+    </>
   );
 };
 
 export default Message;
+
+const DateComponent = ({ date }) => {
+  return (
+    <div className="flex items-center justify-center  my-3">
+      <div className="flex items-center justify-center shadow-sm py-4 px-6 h-8 bg-gray-100 rounded-full text-gray-500">
+        {date}
+      </div>
+    </div>
+  );
+};
