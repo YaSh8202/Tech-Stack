@@ -28,6 +28,8 @@ const ChatBox = () => {
     return () => clearTimeout(interval);
   }, [loading, messages]);
 
+  console.log(messages);
+
   return (
     <ScrollableFeed
       id="messages"

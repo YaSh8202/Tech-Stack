@@ -82,7 +82,14 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
   useEffect(() => {
     if (!message.img || !downloadBtn?.current) return;
 
-    const imageRef = ref(storage, message.img);
+    let imageRef = {
+      name: message.text,
+    };
+    try {
+      imageRef = ref(storage, message.img);
+    } catch (e) {
+      // console.log(e);
+    }
     const xhr = new XMLHttpRequest();
     xhr.responseType = "blob";
     xhr.onload = (event) => {
@@ -111,7 +118,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
 
   return (
     <>
-      {needHeader && <DateComponent date={message?.date} />}
+      {needHeader && <DateComponent date={message.date} />}
       <div
         id={message.id}
         className={` max-w-[85%] md:max-w-[75%]  w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[9rem] ${
@@ -180,8 +187,8 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
               {message.img && file && (
                 <div className="relative  overflow-hidden  group  ">
                   {/* check if file type is of image */}
-                  {file?.type?.startsWith("image") ? (
-                    <div className="relative w-[16rem] h-[12rem] md:w-80">
+                  {file.type.startsWith("image") ? (
+                    <div className="relative w-[16rem] h-[16rem] md:w-80">
                       <Image
                         layout="fill"
                         src={message.img}
@@ -191,7 +198,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                         sizes="100vw"
                       />
                     </div>
-                  ) : file?.type?.startsWith("video") ? (
+                  ) : file.type.startsWith("video") ? (
                     <div className="w-[18rem] md:w-[21rem]">
                       <video
                         src={message.img}
@@ -208,25 +215,27 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                       </div>
                       <div className="flex flex-col flex-1 overflow-hidden ">
                         <p
-                          title={file?.name}
+                          title={file.name}
                           className="text-sm text-gray-600 truncate"
                         >
-                          {file?.name}
+                          {file.name}
                         </p>
                         <p className="text-xs text-gray-500  ">
-                          {getReadableFileSizeString(file?.size)}
+                          {getReadableFileSizeString(file.size)}
                         </p>
                       </div>
                     </div>
                   )}
-                  <a
-                    id="download"
-                    ref={downloadBtn}
-                    className="absolute bottom-1 right-1 invisible group-hover:visible duration-150 p-1 rounded-full bg-gray-100 "
-                    title={`Download ${file?.name}`}
-                  >
-                    <HiDownload className="text-gray-500  " size={16} />
-                  </a>
+                  {selectedGroup.id !== "open-ai" && (
+                    <a
+                      id="download"
+                      ref={downloadBtn}
+                      className="absolute bottom-1 right-1 invisible group-hover:visible duration-150 p-1 rounded-full bg-gray-100 "
+                      title={`Download ${file?.name}`}
+                    >
+                      <HiDownload className="text-gray-500  " size={16} />
+                    </a>
+                  )}
                 </div>
               )}
 

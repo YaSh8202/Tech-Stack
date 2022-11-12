@@ -96,9 +96,7 @@ const MarkdownModal = ({ children }) => {
         onClick={() => {
           setShowModal(false);
         }}
-        className={` ${
-          showModal ? "" : "hidden"
-        } fixed z-10  inset-0 bg-gray-800 bg-opacity-50 overflow-y-auto h-full w-full`}
+        className={`  fixed z-10  inset-0 bg-gray-800 bg-opacity-50 overflow-y-auto h-full w-full`}
       ></div>
       <div className="absolute left-[50%] top-20 translate-x-[-50%] z-20 ">
         <button

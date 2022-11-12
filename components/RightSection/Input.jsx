@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { GroupContext } from "../../lib/groupContext";
 import { UserContext } from "../../lib/userContext";
-import { getResponse } from "../../lib/openai";
+import { getPicture, getResponse } from "../../lib/openai";
 import MarkdownModal from "../Modals/MarkdownModal";
 import { toast } from "react-hot-toast";
 import SearchMessage from "../SearchSideBar/SearchMessage";
@@ -30,6 +30,7 @@ const Input = () => {
     useContext(UserContext);
   const inputRef = useRef(null);
   const showInput = !joinedGroups || joinedGroups.includes(selectedGroup?.id);
+  const [imageMode, setImageMode] = useState(false);
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
@@ -59,10 +60,13 @@ const Input = () => {
 
         const toastId = toast.loading("Thinking...");
 
-        const response = await getResponse(message);
+        const response = imageMode
+          ? await getPicture(message)
+          : await getResponse(message);
+        console.log(response);
         newMessages.push({
           id: Math.random(),
-          text: response,
+          text: imageMode ? "" : response,
           sender: {
             id: "open-ai",
           },
@@ -70,6 +74,8 @@ const Input = () => {
             day: "numeric",
             month: "short",
           }),
+          img: imageMode ? response : "",
+          fileMeta: imageMode ? { type: "image" } : null,
         });
         setMessages((prev) => [...prev, newMessages[1]]);
         toast.success("Done!", { id: toastId });
@@ -86,7 +92,7 @@ const Input = () => {
       const messageId = uuid();
       const messagesRef = doc(
         collection(
-          doc(collection(firestore, "Groups"), selectedGroup?.id),
+          doc(collection(firestore, "Groups"), selectedGroup.id),
           "messages"
         ),
         messageId
@@ -133,7 +139,7 @@ const Input = () => {
         });
       }
 
-      await updateDoc(doc(firestore, "Groups", selectedGroup?.id), {
+      await updateDoc(doc(firestore, "Groups", selectedGroup.id), {
         lastMessage: {
           text: message.trim() === "" ? file.type.split("/")[0] : message,
         },
@@ -154,7 +160,7 @@ const Input = () => {
     await updateDoc(userRef, {
       joinedGroups: arrayUnion(selectedGroup.id),
     });
-    toast.success("Group Joined")
+    toast.success("Group Joined");
   };
 
   if (!showInput) {
@@ -181,7 +187,7 @@ const Input = () => {
         </div>
       )}
       <div className=" flex flex-row-reverse md:flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
-        {selectedGroup?.id !== "open-ai" && (
+        {selectedGroup?.id !== "open-ai" ? (
           <>
             <button
               disabled={!user || selectedGroup.id === "open-ai"}
@@ -213,6 +219,8 @@ const Input = () => {
               <BsMarkdown className="hover:text-green-600" size={24} />
             </MarkdownModal>
           </>
+        ) : (
+          <MyToggle enabled={imageMode} setEnabled={setImageMode} />
         )}
         <form className="flex-1 relative " onSubmit={submitHandler}>
           <input
@@ -273,3 +281,24 @@ const PlusIcon = (props) => (
     />
   </svg>
 );
+
+import { Switch } from "@headlessui/react";
+
+function MyToggle({ enabled, setEnabled }) {
+  return (
+    <Switch
+      checked={enabled}
+      onChange={setEnabled}
+      className={`${
+        enabled ? "bg-blue-600" : "bg-gray-200"
+      } relative inline-flex h-6 w-11 items-center rounded-full`}
+    >
+      <span className="sr-only">Enable notifications</span>
+      <span
+        className={`${
+          enabled ? "translate-x-6" : "translate-x-1"
+        } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+      />
+    </Switch>
+  );
+}

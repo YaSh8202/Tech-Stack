@@ -63,9 +63,7 @@ const LoginModal = () => {
         onClick={() => {
           setUserModal(false);
         }}
-        className={` ${
-          userModal ? "" : "hidden"
-        } fixed z-10  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
+        className={` fixed z-10  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
       ></div>
       <div className="absolute left-[50%] top-28 translate-x-[-50%] z-20">
         {user && username ? (
@@ -178,7 +176,7 @@ function UsernameForm() {
         photoURL: user.photoURL,
         displayName: user.displayName,
         about: "",
-        joinedGroups: [],
+        joinedGroups: ['open-ai'],
       });
       batch.set(usernameDoc, { uid: user.uid });
 
@@ -274,7 +272,7 @@ export const ProfileComponent = ({
     updateDoc(ref, {
       about: newAbout,
     });
-  }, [newAbout, user.uid]);
+  }, [newAbout, user]);
 
   return (
     <>

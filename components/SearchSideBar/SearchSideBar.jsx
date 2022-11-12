@@ -15,7 +15,7 @@ const SearchSideBar = () => {
   };
 
   useEffect(() => {
-    if (!searchKey || searchKey === "") {
+    if (!searchKey) {
       setFilteredMessages([]);
       return;
     }

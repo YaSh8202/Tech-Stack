@@ -7,7 +7,7 @@ import { BsMarkdown } from "react-icons/bs";
 import { BiImageAlt } from "react-icons/bi";
 
 function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  return string?.charAt(0).toUpperCase() + string.slice(1);
 }
 const Group = ({ group }) => {
   const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
