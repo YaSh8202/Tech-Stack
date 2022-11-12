@@ -23,7 +23,6 @@ const GroupList = ({ keyword, showJoined }) => {
     return unsubscribe;
   }, []);
 
-  console.log(joinedGroups)
   useEffect(() => {
     if (!keyword || keyword === "") {
       if (showJoined) {

@@ -18,9 +18,9 @@ const Group = ({ group }) => {
         onClick={() => {
           setSelectedGroup(group);
         }}
-        className={`flex w-full flex-row items-center gap-2  rounded-md cursor-pointer hover:bg-gray-100 h-14 lg:h-16  ${
+        className={`flex w-full flex-row items-center gap-2  cursor-pointer hover:bg-gray-100 h-14 lg:h-16  ${
           selectedGroup?.name === name ? "bg-gray-100" : ""
-        } `}
+        } px-5 `}
       >
         <div className="h-full aspect-square  ">
           <GroupImage size={60} image={image} />

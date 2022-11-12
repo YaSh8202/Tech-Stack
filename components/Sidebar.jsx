@@ -21,7 +21,7 @@ const Sidebar = () => {
     <div
       className={`  ${
         selectedGroup ? "hidden md:flex " : "flex  "
-      }  bg-[#F5FAFC] h-full w-0 md:w-[40vw]   flex-col flex   border-r flex-1 overflow-hidden px-4 md:px-5 min-w-[18rem] `}
+      }  bg-[#F5FAFC] h-full w-0 md:w-[40vw]   flex-col flex   border-r flex-1 overflow-hidden  min-w-[18rem] `}
     >
       <SidebarNav />
       <SearchBar search={search} setSearch={setSearch} />

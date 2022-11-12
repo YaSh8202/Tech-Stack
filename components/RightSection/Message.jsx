@@ -48,13 +48,11 @@ function getReadableFileSizeString(fileSizeInBytes) {
   return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
 }
 const Message = ({ message, linkedMessage, needHeader, last }) => {
-  // const [sender, setSender] = useState(null);
   const sender = message?.sender;
   const { username, user } = useContext(UserContext);
   const { setSelectedMessage, selectedGroup } = useContext(GroupContext);
   const isSender = user?.uid === sender?.id;
   const downloadBtn = useRef(null);
-  // const [file, setFile] = useState({});
   const file = message?.fileMeta;
   const messageRef = useRef(null);
 
@@ -116,7 +114,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
       {needHeader && <DateComponent date={message?.date} />}
       <div
         id={message.id}
-        className={` max-w-[80%] md:max-w-[70%] w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[9rem] ${
+        className={` max-w-[85%] md:max-w-[75%]  w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[9rem] ${
           isSender
             ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
             : "bg-white mr-auto ml-1 rounded-tl-none message-arrow-left "
@@ -255,12 +253,22 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
 
 export default Message;
 
+function isTodayDate(d) {
+  const today = new Date();
+  return (
+    today.toLocaleDateString([], {
+      day: "numeric",
+      month: "short",
+      // year: "2-digit",
+    }) === d
+  );
+}
+
 const DateComponent = ({ date }) => {
-  console.log("date", date);
   return (
     <div className="flex items-center justify-center  my-3">
-      <div className="flex items-center justify-center shadow-sm py-4 px-6 h-8 bg-gray-100 rounded-full text-gray-500">
-        {date}
+      <div className="flex items-center justify-center shadow-sm py-4 px-6 h-8 bg-gray-100 rounded-full text-gray-600">
+        {isTodayDate(date) ? "Today" : date}
       </div>
     </div>
   );

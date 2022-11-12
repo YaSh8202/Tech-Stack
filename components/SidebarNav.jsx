@@ -78,7 +78,6 @@ const SidebarNav = () => {
                     } else {
                       setUserModal(true);
                     }
-                    setShowMenu(false);
                   }}
                   className={`${
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700"
