@@ -4,10 +4,12 @@ import { GroupContext } from "../lib/groupContext";
 import { Flipped, Flipper } from "react-flip-toolkit";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { firestore, postToJSON } from "../lib/firebase";
+import { UserContext } from "../lib/userContext";
 
-const GroupList = ({ keyword }) => {
+const GroupList = ({ keyword, showJoined }) => {
   const [groups, setGroups] = useState([]);
   const [filteredGroups, setFilteredGroups] = useState(groups);
+  const { joinedGroups } = useContext(UserContext);
 
   useEffect(() => {
     const groupsQuery = query(
@@ -23,6 +25,13 @@ const GroupList = ({ keyword }) => {
 
   useEffect(() => {
     if (!keyword || keyword === "") {
+      if (showJoined) {
+        setFilteredGroups(
+          groups.filter((group) => joinedGroups.includes(group.id))
+        );
+        return;
+      }
+
       setFilteredGroups(groups);
     } else {
       setFilteredGroups([
@@ -31,7 +40,7 @@ const GroupList = ({ keyword }) => {
         }),
       ]);
     }
-  }, [keyword, groups, filteredGroups]);
+  }, [keyword, groups, filteredGroups, showJoined, joinedGroups]);
 
   if (!groups) return null;
 
@@ -41,9 +50,16 @@ const GroupList = ({ keyword }) => {
       flipKey={`${filteredGroups?.map((group) => group.id).join("-")}`}
       className="w-full flex-1 mt-3 flex flex-col gap-3 overflow-y-scroll overflow-x-hidden scrollbar-hide "
     >
-      {filteredGroups?.map((group) => (
-        <Group key={group.id} group={group} />
-      ))}
+      {!filteredGroups || filteredGroups.length === 0 ? (
+        <div className="h-full w-full flex items-center justify-center">
+          <h3>
+            No groups found.{" "}
+            
+          </h3>
+        </div>
+      ) : (
+        filteredGroups?.map((group) => <Group key={group.id} group={group} />)
+      )}
     </Flipper>
   );
 };

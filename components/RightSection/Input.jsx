@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 import { auth, firestore, storage } from "../../lib/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
+  arrayUnion,
   collection,
   doc,
   serverTimestamp,
@@ -25,8 +26,10 @@ const Input = () => {
   const [file, setFile] = useState(null);
   const { selectedGroup, setMessages, selectedMessage, setSelectedMessage } =
     useContext(GroupContext);
-  const { user, username, setUserModal } = useContext(UserContext);
+  const { user, username, setUserModal, joinedGroups } =
+    useContext(UserContext);
   const inputRef = useRef(null);
+  const showInput = !joinedGroups || joinedGroups.includes(selectedGroup?.id);
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
@@ -145,6 +148,26 @@ const Input = () => {
 
     setFile(null);
   };
+
+  const addGroupHandler = async () => {
+    const userRef = doc(collection(firestore, "users"), user.uid);
+    await updateDoc(userRef, {
+      joinedGroups: arrayUnion(selectedGroup.id),
+    });
+    toast.success("Group Joined")
+  };
+
+  if (!showInput) {
+    return (
+      <button
+        onClick={addGroupHandler}
+        className="w-full h-[3rem] bg-[#D7F8F4] hover:brightness-105 duration-150 cursor-pointer flex items-center justify-center "
+      >
+        <h5>Join</h5>
+      </button>
+    );
+  }
+
   return (
     <div className="w-full  flex flex-col items-start">
       {selectedMessage && (

@@ -177,6 +177,8 @@ function UsernameForm() {
         username: formValue,
         photoURL: user.photoURL,
         displayName: user.displayName,
+        about: "",
+        joinedGroups: [],
       });
       batch.set(usernameDoc, { uid: user.uid });
 

@@ -74,7 +74,7 @@ const SidebarNav = () => {
             <FiChevronDown className="text-gray-600  " size={28} />
           </button>
           <div
-            className={`bg-white border right-1.5 top-9 px-3  w-24 py-3 absolute rounded-lg flex flex-col hover:bg-gray-100 gap-2 ${
+            className={`bg-white border right-1.5 top-9 px-3  w-24 py-3 absolute rounded-lg flex flex-col  gap-2 ${
               showMenu ? "block" : "hidden"
             } z-10 `}
           >

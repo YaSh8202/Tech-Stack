@@ -33,7 +33,7 @@ const Header = () => {
         >
           <BsSearch className="text-gray-600  " size={18} />
         </button>
-        <FiChevronDown className="text-gray-600" size={20} />
+        {/* <FiChevronDown className="text-gray-600" size={20} /> */}
       </div>
     </div>
   );

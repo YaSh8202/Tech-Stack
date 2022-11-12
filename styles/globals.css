@@ -65,16 +65,6 @@ body {
   margin: 0.5rem 1rem 0.5rem 0;
 }
 
-button:hover {
-  filter: brightness(90%);
-}
-
-button:disabled,
-button[disabled] {
-  filter: brightness(80%);
-  cursor: not-allowed;
-}
-
 /* File uploads */
 
 input[type="file"] {

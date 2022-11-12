@@ -43,6 +43,9 @@ module.exports = {
           "50%": { transform: "rotate(3deg)" },
         },
       },
+      colors: {
+        primary: "#128C7E",
+      },
       animation: {
         scaleFocus: "scaleFocus 1s ease-in-out",
         wiggle: "wiggle 200ms ease-in-out",

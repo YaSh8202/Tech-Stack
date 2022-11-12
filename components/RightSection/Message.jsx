@@ -12,7 +12,7 @@ import { GoReply } from "react-icons/go";
 import SearchMessage from "../SearchSideBar/SearchMessage";
 import { HiDownload } from "react-icons/hi";
 import { storage } from "../../lib/firebase";
-import { getMetadata, ref } from "firebase/storage";
+import { ref } from "firebase/storage";
 import { BsFileEarmarkFill } from "react-icons/bs";
 
 const URL_REGEX =
@@ -52,7 +52,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
   const sender = message?.sender;
   const { username, user } = useContext(UserContext);
   const { setSelectedMessage, selectedGroup } = useContext(GroupContext);
-  const isSender = user.uid === sender?.id;
+  const isSender = user?.uid === sender?.id;
   const downloadBtn = useRef(null);
   // const [file, setFile] = useState({});
   const file = message?.fileMeta;
@@ -80,20 +80,8 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
       hour12: false,
     });
   }
-  console.log(createdAt, message?.createdAt);
 
   useEffect(() => {
-    // const getFile = async () => {
-    //   if (message?.img) {
-    //     const metadata = await getMetadata(imageRef);
-    //     setFile({
-    //       name: metadata.name,
-    //       size: metadata.size,
-    //       type: metadata.contentType,
-    //     });
-    //   }
-    // };
-
     if (!message.img || !downloadBtn?.current) return;
 
     const imageRef = ref(storage, message.img);
@@ -109,8 +97,6 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
     };
     xhr.open("GET", message.img);
     xhr.send();
-    // getFile();
-    // scroll to bottom if the message is last
   }, []);
 
   function renderHTML(text) {
@@ -204,7 +190,6 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                         alt="message"
                         className="rounded-md "
                         objectFit="cover"
-                        fill
                         sizes="100vw"
                       />
                     </div>
