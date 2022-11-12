@@ -8,7 +8,7 @@ import SidebarNav from "./SidebarNav";
 const Sidebar = () => {
   const [search, setSearch] = React.useState("");
   const { selectedGroup } = useContext(GroupContext);
-  const [joinedGroups] = useContext(UserContext);
+  const { joinedGroups, user } = useContext(UserContext);
   const [showJoined, setShowJoined] = React.useState(true);
 
   useEffect(() => {
@@ -25,24 +25,26 @@ const Sidebar = () => {
     >
       <SidebarNav />
       <SearchBar search={search} setSearch={setSearch} />
-      <div className="flex mx-auto my-2 bg-white  rounded-xl overflow-hidden  ">
-        <button
-          onClick={() => setShowJoined(true)}
-          className={`${
-            showJoined ? "bg-primary text-white " : "hover:bg-gray-100"
-          } bg-white text-gray-500 font-bold py-2 px-4       `}
-        >
-          Joined
-        </button>
-        <button
-          onClick={() => setShowJoined(false)}
-          className={`bg-white text-gray-500   ${
-            !showJoined ? "bg-primary text-white " : "hover:bg-gray-100"
-          }  font-bold py-2 px-4  `}
-        >
-          All
-        </button>
-      </div>
+      {user && (
+        <div className="flex mx-auto my-2 bg-white  rounded-xl overflow-hidden  ">
+          <button
+            onClick={() => setShowJoined(true)}
+            className={`${
+              showJoined ? "bg-primary text-white " : "hover:bg-gray-100"
+            } bg-white text-gray-500 font-bold py-2 px-4       `}
+          >
+            Joined
+          </button>
+          <button
+            onClick={() => setShowJoined(false)}
+            className={`bg-white text-gray-500   ${
+              !showJoined ? "bg-primary text-white " : "hover:bg-gray-100"
+            }  font-bold py-2 px-4  `}
+          >
+            All
+          </button>
+        </div>
+      )}
       <GroupList showJoined={showJoined} keyword={search} />
     </div>
   );

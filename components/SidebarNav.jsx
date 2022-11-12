@@ -7,12 +7,13 @@ import { GroupContext } from "../lib/groupContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import Image from "next/image";
+import DropDownMenu from "./RightSection/Menu";
+import { Menu } from "@headlessui/react";
 // import { BsGithub } from "react-icons/bs";
 
 const SidebarNav = () => {
   const { user, username, setUserModal } = useContext(UserContext);
   const { setSelectedGroup, selectedGroup } = useContext(GroupContext);
-  const [showMenu, setShowMenu] = useState(false);
 
   return (
     <div className="  w-full px-3 py-2 h-16">
@@ -67,31 +68,27 @@ const SidebarNav = () => {
             />
           </button>
 
-          <button
-            onClick={() => setShowMenu((prev) => !prev)}
-            className=" relative group "
-          >
-            <FiChevronDown className="text-gray-600  " size={28} />
-          </button>
-          <div
-            className={`bg-white border right-1.5 top-9 px-3  w-24 py-3 absolute rounded-lg flex flex-col  gap-2 ${
-              showMenu ? "block" : "hidden"
-            } z-10 `}
-          >
-            <button
-              onClick={() => {
-                if (username) {
-                  signOut(auth);
-                } else {
-                  setUserModal(true);
-                }
-                setShowMenu(false);
-              }}
-              className=""
-            >
-              {username ? "Logout" : "Login"}
-            </button>
-          </div>
+          <DropDownMenu>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={() => {
+                    if (username) {
+                      signOut(auth);
+                    } else {
+                      setUserModal(true);
+                    }
+                    setShowMenu(false);
+                  }}
+                  className={`${
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                  } block px-4 py-2 text-sm  w-full `}
+                >
+                  {username ? "Logout" : "Login"}
+                </button>
+              )}
+            </Menu.Item>
+          </DropDownMenu>
         </div>
       </div>
     </div>

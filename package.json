@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.4",
     "emoji-picker-react": "^4.3.0",
     "firebase": "^9.11.0",
     "framer-motion": "^7.6.6",

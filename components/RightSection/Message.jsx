@@ -256,6 +256,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
 export default Message;
 
 const DateComponent = ({ date }) => {
+  console.log("date", date);
   return (
     <div className="flex items-center justify-center  my-3">
       <div className="flex items-center justify-center shadow-sm py-4 px-6 h-8 bg-gray-100 rounded-full text-gray-500">
