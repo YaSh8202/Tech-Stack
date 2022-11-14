@@ -31,6 +31,9 @@ const Input = () => {
   const inputRef = useRef(null);
   const showInput = !joinedGroups || joinedGroups.includes(selectedGroup?.id);
   const [imageMode, setImageMode] = useState(false);
+  const { size, elapsed, percentage, download, cancel, error, isInProgress } =
+    useDownloader();
+  console.log("error", error,percentage);
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
@@ -41,63 +44,67 @@ const Input = () => {
     setMessage("");
     if ((message.trim() === "" && !file) || !selectedGroup) return;
 
-    try {
-      if (selectedGroup.id === "open-ai") {
-        const newMessages = [
-          {
-            id: Math.random(),
-            text: message,
-            sender: {
-              id: user.uid,
-            },
-            date: new Date()?.toDateString([], {
-              day: "numeric",
-              month: "short",
-            }),
-          },
-        ];
-        setMessages((prev) => [...prev, ...newMessages]);
-
-        const toastId = toast.loading("Thinking...");
-
-        const response = imageMode
-          ? await getPicture(message)
-          : await getResponse(message);
-        console.log(response);
-        newMessages.push({
+    if (selectedGroup.id === "open-ai") {
+      const newMessages = [
+        {
           id: Math.random(),
-          text: imageMode ? "" : response,
+          text: message,
           sender: {
-            id: "open-ai",
+            id: user.uid,
           },
           date: new Date()?.toDateString([], {
             day: "numeric",
             month: "short",
           }),
-          img: imageMode ? response : "",
-          fileMeta: imageMode ? { type: "image" } : null,
-        });
-        setMessages((prev) => [...prev, newMessages[1]]);
-        toast.success("Done!", { id: toastId });
+        },
+      ];
+      setMessages((prev) => [...prev, ...newMessages]);
 
-        const prevMessages = JSON.parse(localStorage.getItem("openAI")) || [];
-        localStorage.setItem(
-          "openAI",
-          JSON.stringify([...prevMessages, ...newMessages])
-        );
-        return;
+      const toastId = toast.loading("Thinking...");
+
+      const response = imageMode
+        ? await getPicture(message)
+        : await getResponse(message);
+
+      if (imageMode) {
+        download(response, message);
       }
 
-      const toastId = toast.loading("Sending message...");
-      const messageId = uuid();
-      const messagesRef = doc(
-        collection(
-          doc(collection(firestore, "Groups"), selectedGroup.id),
-          "messages"
-        ),
-        messageId
-      );
+      newMessages.push({
+        id: Math.random(),
+        text: imageMode ? "" : response,
+        sender: {
+          id: "open-ai",
+        },
+        date: new Date()?.toDateString([], {
+          day: "numeric",
+          month: "short",
+        }),
+        img: imageMode ? response : "",
+        fileMeta: imageMode ? { type: "image", name: message } : null,
+      });
+      setMessages((prev) => [...prev, newMessages[1]]);
+      toast.success("Done!", { id: toastId });
 
+      const prevMessages = JSON.parse(localStorage.getItem("openAI")) || [];
+      localStorage.setItem(
+        "openAI",
+        JSON.stringify([...prevMessages, ...newMessages])
+      );
+      return;
+    }
+
+    const toastId = toast.loading("Sending message...");
+    const messageId = uuid();
+    const messagesRef = doc(
+      collection(
+        doc(collection(firestore, "Groups"), selectedGroup.id),
+        "messages"
+      ),
+      messageId
+    );
+
+    try {
       if (file) {
         const storageRef = ref(storage, `images/${file.name}`);
         uploadBytesResumable(storageRef, file).then(() => {
@@ -145,12 +152,15 @@ const Input = () => {
         },
         updatedAt: serverTimestamp(),
       });
-
-      toast.success("Message sent!", { id: toastId });
-      setSelectedMessage(null);
     } catch (err) {
       console.log(err);
+      toast.error("Error Sending Message", {
+        id: toastId,
+      });
     }
+
+    toast.success("Message sent!", { id: toastId });
+    setSelectedMessage(null);
 
     setFile(null);
   };
@@ -163,7 +173,7 @@ const Input = () => {
     toast.success("Group Joined");
   };
 
-  if (!showInput) {
+  if (!showInput && user) {
     return (
       <button
         onClick={addGroupHandler}
@@ -283,6 +293,7 @@ const PlusIcon = (props) => (
 );
 
 import { Switch } from "@headlessui/react";
+import useDownloader from "react-use-downloader";
 
 function MyToggle({ enabled, setEnabled }) {
   return (

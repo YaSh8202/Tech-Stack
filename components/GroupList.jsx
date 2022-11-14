@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Group from "./Group";
-import { GroupContext } from "../lib/groupContext";
-import { Flipped, Flipper } from "react-flip-toolkit";
+import { Flipper } from "react-flip-toolkit";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { firestore, postToJSON } from "../lib/firebase";
 import { UserContext } from "../lib/userContext";
@@ -52,10 +51,7 @@ const GroupList = ({ keyword, showJoined }) => {
     >
       {!filteredGroups || filteredGroups.length === 0 ? (
         <div className="h-full w-full flex items-center justify-center">
-          <h3>
-            No groups found.{" "}
-            
-          </h3>
+          <h3>No groups found. </h3>
         </div>
       ) : (
         filteredGroups.map((group) => <Group key={group.id} group={group} />)
