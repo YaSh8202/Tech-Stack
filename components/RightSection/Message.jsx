@@ -87,21 +87,21 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
     };
     try {
       imageRef = ref(storage, message.img);
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = "blob";
+      xhr.onload = (event) => {
+        const blob = xhr.response;
+        const URL = window.URL.createObjectURL(blob);
+        if (downloadBtn.current) {
+          downloadBtn.current.href = URL;
+          downloadBtn.current.download = imageRef.name;
+        }
+      };
+      xhr.open("GET", message.img);
+      xhr.send();
     } catch (e) {
       // console.log(e);
     }
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = "blob";
-    xhr.onload = (event) => {
-      const blob = xhr.response;
-      const URL = window.URL.createObjectURL(blob);
-      if (downloadBtn.current) {
-        downloadBtn.current.href = URL;
-        downloadBtn.current.download = imageRef.name;
-      }
-    };
-    xhr.open("GET", message.img);
-    xhr.send();
   }, []);
 
   function renderHTML(text) {
@@ -226,7 +226,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                       </div>
                     </div>
                   )}
-                  {selectedGroup.id !== "open-ai" && (
+                  {
                     <a
                       id="download"
                       ref={downloadBtn}
@@ -235,7 +235,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                     >
                       <HiDownload className="text-gray-500  " size={16} />
                     </a>
-                  )}
+                  }
                 </div>
               )}
 

@@ -31,9 +31,6 @@ const Input = () => {
   const inputRef = useRef(null);
   const showInput = !joinedGroups || joinedGroups.includes(selectedGroup?.id);
   const [imageMode, setImageMode] = useState(false);
-  const { size, elapsed, percentage, download, cancel, error, isInProgress } =
-    useDownloader();
-  console.log("error", error,percentage);
 
   const emojiClickHandler = (emojiObject) => {
     setMessage(message + emojiObject.emoji);
@@ -66,8 +63,22 @@ const Input = () => {
         ? await getPicture(message)
         : await getResponse(message);
 
+      let url;
       if (imageMode) {
-        download(response, message);
+        try {
+          const imgResult = await fetch("/api/aiimage", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ url: response, name: message }),
+          });
+          console.log(imgResult);
+          const img = await imgResult.json();
+          url = img?.downloadURL;
+        } catch (e) {
+          console.log(e);
+        }
       }
 
       newMessages.push({
@@ -80,7 +91,7 @@ const Input = () => {
           day: "numeric",
           month: "short",
         }),
-        img: imageMode ? response : "",
+        img: imageMode ? url : "",
         fileMeta: imageMode ? { type: "image", name: message } : null,
       });
       setMessages((prev) => [...prev, newMessages[1]]);
@@ -293,8 +304,6 @@ const PlusIcon = (props) => (
 );
 
 import { Switch } from "@headlessui/react";
-import useDownloader from "react-use-downloader";
-
 function MyToggle({ enabled, setEnabled }) {
   return (
     <Switch
