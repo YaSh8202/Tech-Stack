@@ -92,7 +92,9 @@ const Input = () => {
           month: "short",
         }),
         img: imageMode ? url : "",
-        fileMeta: imageMode ? { type: "image", name: message } : null,
+        fileMeta: imageMode
+          ? { type: "image", name: message, width: 256, height: 256 }
+          : null,
       });
       setMessages((prev) => [...prev, newMessages[1]]);
       toast.success("Done!", { id: toastId });
@@ -118,6 +120,18 @@ const Input = () => {
     try {
       if (file) {
         const storageRef = ref(storage, `images/${file.name}`);
+        let width = 0,
+          height = 0;
+        if (file.type.includes("image")) {
+          let _URL = window.URL || window.webkitURL;
+          let img = new Image();
+          img.onload = function () {
+            width = this.width;
+            height = this.height;
+          };
+          img.src = _URL.createObjectURL(file);
+        }
+
         uploadBytesResumable(storageRef, file).then(() => {
           getDownloadURL(storageRef).then(async (downloadURL) => {
             await setDoc(messagesRef, {
@@ -137,6 +151,8 @@ const Input = () => {
                 name: file.name,
                 size: file.size,
                 type: file.type,
+                width,
+                height,
               },
             });
           });
@@ -251,7 +267,7 @@ const Input = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={!user ? "Please Login..." : "Say Something..."}
-            className="h-12 w-full bg-white rounded-full  border outline-none lg:mx-2 px-5 py-1 disabled:opacity-50 "
+            className="h-12 w-full bg-white rounded-full  border outline-none lg:mx-2 px-5 py-1 disabled:opacity-50 focus-within:border-[#128C7E] "
             disabled={!selectedGroup || !user || !username}
             onClick={() => {
               if (!username) {

@@ -14,6 +14,7 @@ import { HiDownload } from "react-icons/hi";
 import { storage } from "../../lib/firebase";
 import { ref } from "firebase/storage";
 import { BsFileEarmarkFill } from "react-icons/bs";
+import MessageImage from "./MessageImage.jsx";
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -188,16 +189,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                 <div className="relative  overflow-hidden  group  ">
                   {/* check if file type is of image */}
                   {file.type.startsWith("image") ? (
-                    <div className="relative w-[16rem] h-[16rem] md:w-80">
-                      <Image
-                        layout="fill"
-                        src={message.img}
-                        alt="message"
-                        className="rounded-md "
-                        objectFit="cover"
-                        sizes="100vw"
-                      />
-                    </div>
+                    <MessageImage file={file} imgSrc={message.img} />
                   ) : file.type.startsWith("video") ? (
                     <div className="w-[18rem] md:w-[21rem]">
                       <video
