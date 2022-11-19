@@ -15,6 +15,7 @@ import { storage } from "../../lib/firebase";
 import { ref } from "firebase/storage";
 import { BsFileEarmarkFill } from "react-icons/bs";
 import MessageImage from "./MessageImage.jsx";
+import Link from "next/link";
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -26,7 +27,7 @@ const renderText = (txt) =>
         key={part}
         target={"_blank"}
         rel="noopener noreferrer"
-        className="underline text-blue-700"
+        className="text-blue-700 underline"
         href={part}
       >
         {part}{" "}
@@ -122,10 +123,10 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
       {needHeader && <DateComponent date={message.date} />}
       <div
         id={message.id}
-        className={` max-w-[85%] md:max-w-[75%]  w-auto border rounded-md p-[6px_7px_6px_9px] flex flex-col text-sm text-[#010101] min-w-[9rem] ${
+        className={` flex w-auto  min-w-[9rem] max-w-[92%]  flex-col rounded-md border p-[6px_7px_6px_9px] text-sm text-[#010101] md:max-w-[75%] ${
           isSender
-            ? "bg-[#D7F8F4] mr-1 ml-auto rounded-tr-none message-sender-arrow-right "
-            : "bg-white mr-auto ml-1 rounded-tl-none message-arrow-left "
+            ? "mr-1 ml-auto rounded-tr-none bg-[#D7F8F4] message-sender-arrow-right "
+            : "mr-auto ml-1 rounded-tl-none bg-white message-arrow-left "
         } `}
       >
         {/* header containing usernmae and time */}
@@ -138,22 +139,22 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
             <div
               data-html={true}
               data-tip={ReactDOMServer.renderToString(
-                <div className="flex flex-row items-center justify-between px-5 py-3 rounded  ">
+                <div className="flex flex-row items-center justify-between rounded px-5 py-3  ">
                   <img
                     src={sender?.photoURL}
                     alt="sender"
-                    className="w-10 h-10 rounded-full"
+                    className="h-10 w-10 rounded-full"
                     layout="intrinsic"
                     width={40}
                     height={40}
                   />
-                  <div className="flex flex-col items-end ml-3 ">
+                  <div className="ml-3 flex flex-col items-end ">
                     <p>{sender?.displayName}</p>
                     <p className="text-xs">@{sender?.username}</p>
                   </div>
                 </div>
               )}
-              className=" text-[#0c453e] text-xs underline cursor-pointer  hover:font-semibold font-medium  "
+              className=" cursor-pointer text-xs font-medium text-[#0c453e]  underline hover:font-semibold  "
             >
               {sender?.username}
             </div>
@@ -161,7 +162,8 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
               <button onClick={handleReply}>
                 <GoReply size={11} className="text-gray-600" />
               </button>
-              <div className="text-[10px] ml-2 ">{createdAt}</div>
+
+              <div className="ml-2 text-[10px] ">{createdAt}</div>
             </div>
           </div>
         )}
@@ -173,7 +175,9 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
         )}
 
         {/* message body */}
-        <div className={`${message.isMarkdown ? "ml-auto" : ""}`}>
+        <div
+          className={`${message.isMarkdown ? "ml-auto max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl overflow-auto" : ""}  `}
+        >
           {message.isMarkdown ? (
             // if message is markdown
             <MdEditor
@@ -186,7 +190,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
           ) : (
             <div className="flex flex-col gap-2  py-1  ">
               {message.img && file && (
-                <div className="relative  overflow-hidden  group  ">
+                <div className="group  relative  overflow-hidden  ">
                   {/* check if file type is of image */}
                   {file.type.startsWith("image") ? (
                     <MessageImage file={file} imgSrc={message.img} />
@@ -201,14 +205,14 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                       />
                     </div>
                   ) : (
-                    <div className="flex flex-row items-center gap-2  rounded-md px-1 py-2 max-w-[12rem]">
-                      <div className="group bg-green-500 hover:text-white rounded-full p-3 border text-white  ">
+                    <div className="flex max-w-[12rem] flex-row items-center  gap-2 rounded-md px-1 py-2">
+                      <div className="group rounded-full border bg-green-500 p-3 text-white hover:text-white  ">
                         <BsFileEarmarkFill size={20} className=" " />
                       </div>
-                      <div className="flex flex-col flex-1 overflow-hidden ">
+                      <div className="flex flex-1 flex-col overflow-hidden ">
                         <p
                           title={file.name}
-                          className="text-sm text-gray-600 truncate"
+                          className="truncate text-sm text-gray-600"
                         >
                           {file.name}
                         </p>
@@ -222,7 +226,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                     <a
                       id="download"
                       ref={downloadBtn}
-                      className="absolute bottom-1 right-1 invisible group-hover:visible duration-150 p-1 rounded-full bg-gray-100 "
+                      className="invisible absolute bottom-1 right-1 rounded-full bg-gray-100 p-1 duration-150 group-hover:visible "
                       title={`Download ${file?.name}`}
                     >
                       <HiDownload className="text-gray-500  " size={16} />
@@ -232,7 +236,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
               )}
 
               {message.text && (
-                <p className="text-sm whitespace-pre-wrap self-end cl">
+                <p className="cl self-end whitespace-pre-wrap text-sm">
                   {renderText(message.text.trim())}
                 </p>
               )}
@@ -247,6 +251,21 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
           borderColor="#e5e7eb"
           border
         />
+        {message.isMarkdown && !message.repliedTo && (
+          <Link href={`/${selectedGroup.id}/${message.id}`}>
+            <a
+              title={"Answer this question"}
+              className={`absolute rounded-full bg-teal-50 p-1 ${
+                isSender ? "left-[-28px]" : "right-[-28px]"
+              } top-[50%] translate-y-[-50%] `}
+            >
+              <img
+                className="h-5 w-5"
+                src="https://img.icons8.com/windows/64/null/stackexchange.png"
+              />
+            </a>
+          </Link>
+        )}
       </div>
     </>
   );
@@ -267,8 +286,8 @@ function isTodayDate(d) {
 
 const DateComponent = ({ date }) => {
   return (
-    <div className="flex items-center justify-center  my-3">
-      <div className="flex items-center justify-center shadow-sm py-4 px-6 h-8 bg-gray-100 rounded-full text-gray-600">
+    <div className="my-3 flex items-center  justify-center">
+      <div className="flex h-8 items-center justify-center rounded-full bg-gray-100 py-4 px-6 text-gray-600 shadow-sm">
         {isTodayDate(date) ? "Today" : date}
       </div>
     </div>

@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      container: {
+        center: true,
+      },
       fontFamily: {
         PlusJakartaSans: ["Plus Jakarta Sans", "sans-serif"],
       },
@@ -55,6 +58,7 @@ module.exports = {
   plugins: [
     require("tailwind-scrollbar-hide"),
     require("tailwindcss-tooltip-arrow-after")(),
+    require("tailwind-scrollbar"),
 
     function ({ addVariant }) {
       addVariant("child", "& > *");

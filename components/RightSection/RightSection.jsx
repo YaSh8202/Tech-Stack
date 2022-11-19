@@ -9,7 +9,7 @@ const RightSection = () => {
 
   return (
     <section
-      className={`flex flex-col justify-between flex-[3] overflow-auto ${
+      className={`flex flex-[3] flex-col justify-between overflow-auto ${
         !selectedGroup ? "hidden md:flex " : "flex"
       } `}
     >
@@ -20,8 +20,8 @@ const RightSection = () => {
           <Input />
         </>
       ) : (
-        <div className="w-full h-full grid place-content-center ">
-          <h2 className="text-3xl text-gray-400  truncate ">Select a group</h2>
+        <div className="grid h-full w-full place-content-center ">
+          <h2 className="truncate text-3xl  text-gray-400 ">Select a group</h2>
         </div>
       )}
     </section>

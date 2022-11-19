@@ -19,6 +19,10 @@ const ChatBox = () => {
   const scrollRef = useRef(null);
 
   useEffect(() => {
+    if (selectedGroup.questionPage) {
+      return;
+    }
+
     const interval = setTimeout(() => {
       scrollRef.current?.scrollToBottom({
         behavior: "smooth",
@@ -28,12 +32,11 @@ const ChatBox = () => {
     return () => clearTimeout(interval);
   }, [loading, messages]);
 
-
   return (
     <ScrollableFeed
       id="messages"
       ref={scrollRef}
-      className="flex flex-col mt-2 gap-2 flex-1 w-full px-2 md:px-6  overflow-y-scroll scrollbar-hide   "
+      className="mt-2 flex w-full flex-1 flex-col gap-2 overflow-x-hidden overflow-y-scroll   px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 md:px-6   "
     >
       {loading || !messages ? (
         <Lottie options={defaultOptions} height={400} width={400} />

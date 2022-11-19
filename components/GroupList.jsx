@@ -47,10 +47,10 @@ const GroupList = ({ keyword, showJoined }) => {
     <Flipper
       spring="veryGentle"
       flipKey={`${filteredGroups?.map((group) => group.id).join("-")}`}
-      className="w-full flex-1 my-2 flex flex-col gap-3 overflow-y-scroll overflow-x-hidden scrollbar-hide "
+      className="my-2 flex w-full flex-1 flex-col gap-3 overflow-x-hidden overflow-y-scroll scrollbar-hide "
     >
       {!filteredGroups || filteredGroups.length === 0 ? (
-        <div className="h-full w-full flex items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center">
           <h3>No groups found. </h3>
         </div>
       ) : (

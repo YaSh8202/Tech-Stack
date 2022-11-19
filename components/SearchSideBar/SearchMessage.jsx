@@ -54,21 +54,21 @@ const SearchMessage = ({ message, inputType }) => {
           msg?.classList.remove("animate-scaleFocus");
         }, 1000);
       }}
-      className={`flex flex-col px-3 py-2 box-border w-full bg-gray-100 rounded cursor-pointer {${
+      className={`box-border flex w-full cursor-pointer flex-col rounded bg-gray-100 px-3 py-2 {${
         inputType ? "hover:scale-[1.02]" : ""
-      } hover:shadow  duration-150  `}
+      } duration-150  hover:shadow  `}
     >
       <p className="text-xs text-gray-600"> {createdAt}</p>
       <div className="flex flex-row items-center">
         <p className="text-sm text-gray-600 underline">@{sender?.username}</p>
-        <div className="ml-2 text-sm text-gray-700 font-medium w-min flex-1 truncate flex items-center ">
+        <div className="ml-2 flex w-min flex-1 items-center truncate text-sm font-medium text-gray-700 ">
           {message?.img && message?.img !== "" && (
             <>
               <BiImageAlt size={16} />
               <p>Image</p>
             </>
           )}
-          <p className="truncate max-w-full "> {message?.text}</p>
+          <p className="max-w-full truncate "> {message?.text}</p>
         </div>
       </div>
     </div>

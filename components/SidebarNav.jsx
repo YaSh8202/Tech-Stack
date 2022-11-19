@@ -16,11 +16,11 @@ const SidebarNav = () => {
   const { setSelectedGroup, selectedGroup } = useContext(GroupContext);
 
   return (
-    <div className="  w-full px-3 py-2 h-16">
-      <div className="flex-row h-full flex items-center justify-between">
+    <div className="  h-16 w-full px-3 py-2">
+      <div className="flex h-full flex-row items-center justify-between">
         <div>
           <button
-            className="w-11 h-11  bg-gray-200 p-1 rounded-full "
+            className="h-11 w-11  rounded-full bg-gray-200 p-1 "
             onClick={() => {
               setUserModal(true);
             }}
@@ -31,14 +31,14 @@ const SidebarNav = () => {
                 "https://img.icons8.com/material-rounded/452/user.png"
               }
               alt=""
-              className="rounded-full cursor-pointer "
+              className="cursor-pointer rounded-full "
               layout="intrinsic"
               width={40}
               height={40}
             />
           </button>
         </div>
-        <div className=" flex items-center relative gap-4">
+        <div className=" relative flex items-center gap-4">
           <a
             target={"_blank"}
             rel="noopener noreferrer"
@@ -46,7 +46,7 @@ const SidebarNav = () => {
             className="group"
           >
             <FiGithub
-              className={`  text-gray-600 bg-transparent  group-hover:scale-105  `}
+              className={`  bg-transparent text-gray-600  group-hover:scale-105  `}
               size={26}
             />
           </a>
@@ -63,7 +63,7 @@ const SidebarNav = () => {
             <SiOpenai
               className={` ${
                 selectedGroup?.id === "open-ai" ? "text-[#128C7E]" : ""
-              } text-gray-600 bg-transparent  group-hover:text-[#128C7E] group-hover:scale-105  `}
+              } bg-transparent text-gray-600  group-hover:scale-105 group-hover:text-[#128C7E]  `}
               size={26}
             />
           </button>
@@ -81,7 +81,7 @@ const SidebarNav = () => {
                   }}
                   className={`${
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                  } block px-4 py-2 text-sm  w-full `}
+                  } block w-full px-4 py-2  text-sm `}
                 >
                   {username ? "Logout" : "Login"}
                 </button>

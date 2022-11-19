@@ -5,35 +5,37 @@ import TimeAgo from "timeago-react";
 import { GroupContext } from "../lib/groupContext";
 import { BsMarkdown } from "react-icons/bs";
 import { BiImageAlt } from "react-icons/bi";
+import { useRouter } from "next/router";
 
 function capitalizeFirstLetter(string) {
-  return string?.charAt(0).toUpperCase() + string.slice(1);
+  return string?.charAt(0).toUpperCase() + string?.slice(1);
 }
 const Group = ({ group }) => {
   const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
   const { image, name, lastMessage, updatedAt } = group;
+  const router = useRouter();
   return (
     <Flipped flipId={group.id} c>
       <div
         onClick={() => {
-          setSelectedGroup(group);
+          router.push(`/${group.id}`);
         }}
-        className={`flex w-full flex-row items-center gap-2  cursor-pointer hover:bg-gray-100 h-14 lg:h-16  ${
+        className={`flex h-14 w-full cursor-pointer flex-row  items-center gap-2 hover:bg-gray-100 lg:h-16  ${
           selectedGroup?.name === name ? "bg-gray-100" : ""
         } px-5 `}
       >
-        <div className="h-full aspect-square  ">
+        <div className="aspect-square h-full  ">
           <GroupImage size={60} image={image} />
         </div>
-        <div className="flex flex-col flex-1 h-full py-2  items-start justify-between overflow-auto ">
-          <div className="flex flex-row w-full  items-center justify-between">
-            <h3 className=" text-sm md:text-base lg:text-lg truncate flex-1 text-gray-800">
+        <div className="flex h-full flex-1 flex-col items-start  justify-between overflow-auto py-2 ">
+          <div className="flex w-full flex-row  items-center justify-between">
+            <h3 className=" flex-1 truncate text-sm text-gray-800 md:text-base lg:text-lg">
               {name}
             </h3>
 
             {updatedAt && (
               <TimeAgo
-                className=" text-[10px] lg:text-xs text-gray-400  truncate  "
+                className=" truncate text-[10px] text-gray-400  lg:text-xs  "
                 datetime={`${new Date(updatedAt).toLocaleString()}`}
                 live={false}
                 opts={{
@@ -43,9 +45,9 @@ const Group = ({ group }) => {
             )}
           </div>
 
-          <div className="text-xs overflow-hidden text-gray-500 w-full ">
-            {["Markdown", "Image","video"].includes(lastMessage?.text) ? (
-              <p className="flex gap-1 items-center ">
+          <div className="w-full overflow-hidden text-xs text-gray-500 ">
+            {["Markdown", "Image", "video"].includes(lastMessage?.text) ? (
+              <p className="flex items-center gap-1 ">
                 {lastMessage?.text === "Markdown" ? (
                   <BsMarkdown size={16} />
                 ) : (
@@ -54,7 +56,7 @@ const Group = ({ group }) => {
                 {capitalizeFirstLetter(lastMessage?.text)}
               </p>
             ) : (
-              <p className="truncate max-w-[12rem] "> {lastMessage?.text}</p>
+              <p className="max-w-[12rem] truncate "> {lastMessage?.text}</p>
             )}
           </div>
         </div>
@@ -73,7 +75,7 @@ export function GroupImage({ image, size }) {
       width={200}
       height={200}
       alt=""
-      className={` w-[${size}px] h-[${size}px] rounded-md h-full bg-white `}
+      className={` w-[${size}px] h-[${size}px] h-full rounded-md bg-white `}
     />
   );
 }

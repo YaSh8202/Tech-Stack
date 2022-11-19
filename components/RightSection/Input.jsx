@@ -73,7 +73,6 @@ const Input = () => {
             },
             body: JSON.stringify({ url: response, name: message }),
           });
-          console.log(imgResult);
           const img = await imgResult.json();
           url = img?.downloadURL;
         } catch (e) {
@@ -158,7 +157,7 @@ const Input = () => {
           });
         });
       } else {
-        await setDoc(messagesRef, {
+        const msg = {
           id: messageId,
           text: message,
           createdAt: serverTimestamp(),
@@ -170,7 +169,9 @@ const Input = () => {
             photoURL: user.photoURL,
             displayName: user.displayName,
           },
-        });
+        };
+        setMessages((prev) => [...prev, msg]);
+        await setDoc(messagesRef, msg);
       }
 
       await updateDoc(doc(firestore, "Groups", selectedGroup.id), {
@@ -204,7 +205,7 @@ const Input = () => {
     return (
       <button
         onClick={addGroupHandler}
-        className="w-full h-[3rem] bg-[#D7F8F4] hover:brightness-105 duration-150 cursor-pointer flex items-center justify-center "
+        className="flex h-[3rem] w-full cursor-pointer items-center justify-center bg-[#D7F8F4] duration-150 hover:brightness-105 "
       >
         <h5>Join</h5>
       </button>
@@ -212,9 +213,9 @@ const Input = () => {
   }
 
   return (
-    <div className="w-full  flex flex-col items-start">
+    <div className="flex  w-full flex-col items-start">
       {selectedMessage && (
-        <div className="bg-gray-200 flex  w-full px-4 py-2  ">
+        <div className="flex w-full  bg-gray-200 px-4 py-2  ">
           <div className="   ml-auto  max-h-[6rem] overflow-y-auto overflow-x-hidden ">
             <SearchMessage inputType={true} message={selectedMessage} />
           </div>
@@ -223,7 +224,7 @@ const Input = () => {
           </button>
         </div>
       )}
-      <div className=" flex flex-row-reverse md:flex-row h-20 py-2 items-center justify-around w-full px-5 gap-4 bg-[#F6F6F6] ">
+      <div className=" flex h-20 w-full flex-row-reverse items-center justify-around gap-4 bg-[#F6F6F6] py-2 px-5 md:flex-row ">
         {selectedGroup?.id !== "open-ai" ? (
           <>
             <button
@@ -259,7 +260,7 @@ const Input = () => {
         ) : (
           <MyToggle enabled={imageMode} setEnabled={setImageMode} />
         )}
-        <form className="flex-1 relative " onSubmit={submitHandler}>
+        <form className="relative flex-1 " onSubmit={submitHandler}>
           <input
             ref={inputRef}
             id="message"
@@ -267,7 +268,7 @@ const Input = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={!user ? "Please Login..." : "Say Something..."}
-            className="h-12 w-full bg-white rounded-full  border outline-none lg:mx-2 px-5 py-1 disabled:opacity-50 focus-within:border-[#128C7E] "
+            className="h-12 w-full rounded-full border  bg-white px-5 py-1 outline-none focus-within:border-[#128C7E] disabled:opacity-50 lg:mx-2 "
             disabled={!selectedGroup || !user || !username}
             onClick={() => {
               if (!username) {
@@ -276,7 +277,7 @@ const Input = () => {
             }}
           />
           {showEmojis && (
-            <div className="absolute left-0 md:left-[-8rem] bottom-16 ">
+            <div className="absolute left-0 bottom-16 md:left-[-8rem] ">
               <EmojiPicker
                 autoFocusSearch={false}
                 onEmojiClick={emojiClickHandler}

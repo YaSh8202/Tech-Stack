@@ -96,23 +96,23 @@ const MarkdownModal = ({ children }) => {
         onClick={() => {
           setShowModal(false);
         }}
-        className={`  fixed z-10  inset-0 bg-gray-800 bg-opacity-50 overflow-y-auto h-full w-full`}
+        className={`  fixed inset-0  z-10 h-full w-full overflow-y-auto bg-gray-800 bg-opacity-50`}
       ></div>
-      <div className="absolute left-[50%] top-20 translate-x-[-50%] z-20 ">
+      <div className="absolute left-[50%] top-20 z-20 translate-x-[-50%] ">
         <button
           onClick={() => setShowModal(false)}
-          className="absolute z-30 right-2 top-1 bg-gray-200 rounded-full "
+          className="absolute right-2 top-1 z-30 rounded-full bg-gray-200 "
         >
           <IoClose className="text-xl text-gray-800 " />
         </button>
         <button
           onClick={handleSendMarkdown}
           title="Send Message"
-          className="absolute z-30 right-9 bottom-9 md:right-14 md:top-[34.5px] flex   group "
+          className="group absolute right-9 bottom-9 z-30 flex md:right-14   md:top-[34.5px] "
         >
           <AiOutlineSend className="text-lg text-gray-800 group-hover:text-green-500 " />
         </button>
-        <div className="relative px-4 py-6 border w-[70vw] shadow-lg rounded-md bg-white">
+        <div className="relative w-[70vw] rounded-md border bg-white px-4 py-6 shadow-lg">
           <div>
             <MdEditor
               style={{ height: "500px" }}

@@ -17,27 +17,27 @@ const Header = () => {
   const { user, joinedGroups } = useContext(UserContext);
 
   return (
-    <div className="w-full flex flex-row justify-between py-4 px-6 bg-[#F7F7FC] h-[70px]  ">
+    <div className="flex h-[70px] w-full flex-row justify-between bg-[#F7F7FC] py-4 px-6  ">
       <div className="flex flex-1 flex-row items-center">
         <button
           onClick={() => setSelectedGroup(null)}
           className="block md:hidden"
         >
-          <IoArrowBackOutline className=" mr-2 w-5 h-5 text-gray-700 " />
+          <IoArrowBackOutline className=" mr-2 h-5 w-5 text-gray-700 " />
         </button>
-        <div className="h-full aspect-square ">
+        <div className="aspect-square h-full ">
           <GroupImage size={50} image={selectedGroup?.image} />
         </div>
-        <h2 className="ml-4 text-base md:text-lg text-gray-700 font-semibold truncate ">
+        <h2 className="ml-4 truncate text-base font-semibold text-gray-700 md:text-lg ">
           {selectedGroup?.name}
         </h2>
       </div>
-      <div className="flex flex-row items-center mr-2 gap-5 relative  ">
+      <div className="relative mr-2 flex flex-row items-center gap-5  ">
         <button
           onClick={() => {
             setShowSearchBar((prev) => !prev);
           }}
-          className=" checked:bg-gray-50 rounded-full p-2.5 hover:bg-gray-100 duration-200 "
+          className=" rounded-full p-2.5 duration-200 checked:bg-gray-50 hover:bg-gray-100 "
         >
           <BsSearch className="text-gray-600  " size={18} />
         </button>
@@ -58,7 +58,7 @@ const Header = () => {
                   }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm  w-full"
+                    "block w-full px-4 py-2  text-sm"
                   )}
                 >
                   Exit Group

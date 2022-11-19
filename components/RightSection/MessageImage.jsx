@@ -34,7 +34,7 @@ function MessageImage({ imgSrc, file }) {
       // sizes="100vw"
       key={imgSrc}
       width={width}
-      height={(file.height / file.width) * width || width* 0.75}
+      height={(file.height / file.width) * width || width * 0.75}
     />
   );
 }

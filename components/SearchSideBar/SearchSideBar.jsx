@@ -35,17 +35,17 @@ const SearchSideBar = () => {
         visible: { width: "100%" },
         hidden: { width: "0%" },
       }}
-      className=" absolute lg:relative max-w-[20rem] bg-gray-50 right-0 top-0 bottom-0 lg:flex-[1.25] box-border border-l overflow-hidden"
+      className=" absolute right-0 top-0 bottom-0 box-border max-w-[20rem] overflow-hidden border-l bg-gray-50 lg:relative lg:flex-[1.25]"
     >
       {/* Header */}
-      <div className="w-full box-border overflow-hidden flex items-center flex-row py-4 px-4 bg-[#F7F7FC] h-[70px]  ">
+      <div className="box-border flex h-[70px] w-full flex-row items-center overflow-hidden bg-[#F7F7FC] py-4 px-4  ">
         <button onClick={hideSearchBar}>
-          <IoMdClose className="w-5 h-5 text-gray-700 " />
+          <IoMdClose className="h-5 w-5 text-gray-700 " />
         </button>
-        <h2 className="ml-5 text-lg text-gray-700 font-semibold">Search</h2>
+        <h2 className="ml-5 text-lg font-semibold text-gray-700">Search</h2>
       </div>
       {/* Header End */}
-      <div className="flex flex-col items-start w-full px-2 box-border ">
+      <div className="box-border flex w-full flex-col items-start px-2 ">
         <SearchInput
           searchKey={searchKey}
           setSearchKey={setSearchKey}
@@ -54,7 +54,7 @@ const SearchSideBar = () => {
         {filteredMessages.map((message) => (
           <div
             key={message.id}
-            className="w-full flex flex-col items-start gap-2 mt-2  "
+            className="mt-2 flex w-full flex-col items-start gap-2  "
           >
             <SearchMessage message={message} />
           </div>

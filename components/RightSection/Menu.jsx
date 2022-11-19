@@ -6,7 +6,7 @@ export default function DropDownMenu({ children }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center  bg-transparent px-2 text-sm font-medium text-gray-700 py-3 focus:outline-none  ">
+        <Menu.Button className="inline-flex w-full justify-center  bg-transparent px-2 py-3 text-sm font-medium text-gray-700 focus:outline-none  ">
           <FiChevronDown className="text-gray-600" size={20} />
         </Menu.Button>
       </div>

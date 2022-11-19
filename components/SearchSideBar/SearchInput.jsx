@@ -3,15 +3,15 @@ import { BiLeftArrowAlt } from "react-icons/bi";
 
 const SearchInput = ({ searchKey, setSearchKey, hideSearchBar }) => {
   return (
-    <div className="bg-[#DEDEE2] px-2 rounded w-full box-border  h-9 flex flex-row items-center mt-2 ">
+    <div className="mt-2 box-border flex h-9 w-full  flex-row items-center rounded bg-[#DEDEE2] px-2 ">
       <button onClick={hideSearchBar}>
         <BiLeftArrowAlt className="h-5 w-5 text-gray-700" />
       </button>
-      <div className="h-full flex-1 flex items-center ">
+      <div className="flex h-full flex-1 items-center ">
         <input
           autoFocus
           type="text"
-          className="pl-2 h-full bg-transparent placeholder:text-gray-800 flex-1 outline-none "
+          className="h-full flex-1 bg-transparent pl-2 outline-none placeholder:text-gray-800 "
           placeholder="Search"
           id="search"
           value={searchKey}

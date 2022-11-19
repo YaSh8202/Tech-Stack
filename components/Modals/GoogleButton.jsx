@@ -2,7 +2,7 @@ import { signInWithPopup } from "firebase/auth";
 import React from "react";
 import { auth, googleAuthProvider } from "../../lib/firebase";
 
-const GoogleButton = ({  closeModal }) => {
+const GoogleButton = ({ closeModal }) => {
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleAuthProvider);
@@ -14,14 +14,14 @@ const GoogleButton = ({  closeModal }) => {
   return (
     <button
       onClick={signInWithGoogle}
-      className="w-full hover:opacity-90 duration-150 items-center  pr-0  bg-[#1a73e8] flex  "
+      className="flex w-full items-center bg-[#1a73e8]  pr-0  duration-150 hover:opacity-90  "
     >
-      <div className="bg-white w-12 h-11 flex items-center justify-center m-[1.5px] overflow-hidden  ">
+      <div className="m-[1.5px] flex h-11 w-12 items-center justify-center overflow-hidden bg-white  ">
         <svg
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 48 48"
-          className="LgbsSe-Bz112c w-[24px] h-[24px] "
+          className="LgbsSe-Bz112c h-[24px] w-[24px] "
         >
           <g>
             <path
@@ -44,7 +44,7 @@ const GoogleButton = ({  closeModal }) => {
           </g>
         </svg>
       </div>
-      <div className="flex-1 mx-3 text-lg font-PlusJakartaSans font-medium text-white  ">
+      <div className="mx-3 flex-1 font-PlusJakartaSans text-lg font-medium text-white  ">
         Sign in with Google
       </div>
     </button>

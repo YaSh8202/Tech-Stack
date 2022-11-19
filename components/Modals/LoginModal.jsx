@@ -63,29 +63,29 @@ const LoginModal = () => {
         onClick={() => {
           setUserModal(false);
         }}
-        className={` fixed z-10  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
+        className={` fixed inset-0  z-10 h-full w-full overflow-y-auto bg-gray-600 bg-opacity-50`}
       ></div>
-      <div className="absolute left-[50%] top-28 translate-x-[-50%] z-20">
+      <div className="absolute left-[50%] top-28 z-20 translate-x-[-50%]">
         {user && username ? (
           <ProfileComponent about={about} username={username} user={user} />
         ) : (
           <>
-            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="relative top-20 mx-auto w-96 rounded-md border bg-white p-5 shadow-lg">
               <button
                 onClick={() => setUserModal(false)}
-                className="absolute right-8 top-8 hover:bg-gray-50 rounded-full "
+                className="absolute right-8 top-8 rounded-full hover:bg-gray-50 "
               >
                 <IoClose className="text-xl text-gray-700 " />
               </button>
               <div className="mt-3 text-center">
-                <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
                   {/* TEch Stack Icon */}
                   <CgStack />
                 </div>
-                <h3 className="font-bold text-xl leading-6 mt-2  text-blue-600">
+                <h3 className="mt-2 text-xl font-bold leading-6  text-blue-600">
                   Tech Stack
                 </h3>
-                <div className="items-center my-3 px-4 py-3">
+                <div className="my-3 items-center px-4 py-3">
                   {user ? (
                     username ? (
                       <>show profile</>
@@ -176,7 +176,7 @@ function UsernameForm() {
         photoURL: user.photoURL,
         displayName: user.displayName,
         about: "",
-        joinedGroups: ['open-ai'],
+        joinedGroups: ["open-ai"],
       });
       batch.set(usernameDoc, { uid: user.uid });
 
@@ -191,7 +191,7 @@ function UsernameForm() {
       <section>
         <h3 className="text-xl font-bold">Choose Username</h3>
         <form className="mt-2" onSubmit={onSubmit}>
-          <div className="flex items-center mb-2">
+          <div className="mb-2 flex items-center">
             <input
               className="user-input focus:border-b  "
               type="text"
@@ -202,7 +202,7 @@ function UsernameForm() {
             />
             <button
               type="submit"
-              className=" bg-green-400 p-2 text-white rounded   "
+              className=" rounded bg-green-400 p-2 text-white   "
               disabled={!isValid}
             >
               Choose
@@ -246,11 +246,11 @@ export default LoginModal;
 
 const GithubOAuthButton = ({ onClick }) => (
   <button
-    className="bg-[#333333] w-full hover:opacity-90 duration-150 items-center flex flex-row justify-center gap-3 h-12 mt-3 "
+    className="mt-3 flex h-12 w-full flex-row items-center justify-center gap-3 bg-[#333333] duration-150 hover:opacity-90 "
     onClick={onClick}
   >
-    <BsGithub className="w-8 h-8 text-white" />
-    <p className="text-white text-lg font-medium">Signin with Github</p>
+    <BsGithub className="h-8 w-8 text-white" />
+    <p className="text-lg font-medium text-white">Signin with Github</p>
   </button>
 );
 function auto_grow(element) {
@@ -276,8 +276,8 @@ export const ProfileComponent = ({
 
   return (
     <>
-      <div className="card relative p-5 py-8 rounded   w-96 mx-auto bg-white  shadow-2xl hover:shadow">
-        <div className="w-32 mx-auto rounded-full -mt-20 border-8 border-white">
+      <div className="card relative mx-auto w-96 rounded   bg-white p-5 py-8  shadow-2xl hover:shadow">
+        <div className="mx-auto -mt-20 w-32 rounded-full border-8 border-white">
           <Image
             className="rounded-full"
             src={user.photoURL}
@@ -287,11 +287,11 @@ export const ProfileComponent = ({
             height={200}
           />
         </div>
-        <div className="text-center mt-2 text-3xl font-medium">
+        <div className="mt-2 text-center text-3xl font-medium">
           {user?.displayName}
         </div>
-        <div className="text-center mt-2 font-light text-sm">@{username}</div>
-        <div className="mt-3 font-light text-sm flex ">
+        <div className="mt-2 text-center text-sm font-light">@{username}</div>
+        <div className="mt-3 flex text-sm font-light ">
           <textarea
             onInput={(e) => auto_grow(aboutRef.current)}
             onChange={(e) => {
@@ -299,8 +299,8 @@ export const ProfileComponent = ({
             }}
             readOnly={!isEdit}
             className={`${
-              isEdit ? "border-b block " : ""
-            } w-full about  min-h-[21px] resize-none outline-none overflow-hidden   `}
+              isEdit ? "block border-b " : ""
+            } about min-h-[21px]  w-full resize-none overflow-hidden outline-none   `}
             value={newAbout}
             ref={aboutRef}
             placeholder="About you"
