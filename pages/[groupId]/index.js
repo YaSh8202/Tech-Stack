@@ -5,6 +5,7 @@ import { useContext, useEffect } from "react";
 import { GroupContext } from "../../lib/groupContext";
 import { firestore, postToJSON } from "../../lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import MetaTags from "../../components/Metatags";
 
 export default function GroupPage({ group }) {
   const { showSearchBar, setSelectedGroup } = useContext(GroupContext);
@@ -15,9 +16,7 @@ export default function GroupPage({ group }) {
 
   return (
     <>
-      <Head>
-        <title>Tech Stack</title>
-      </Head>
+      <MetaTags title={group.name} image={group.image} />
       <RightSection />
       {showSearchBar && <SearchSideBar />}
     </>

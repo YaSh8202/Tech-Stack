@@ -9,6 +9,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import React, { useContext, useEffect } from "react";
+import MetaTags from "../../components/Metatags";
 import RightSection from "../../components/RightSection/RightSection";
 import SearchSideBar from "../../components/SearchSideBar/SearchSideBar";
 import { firestore, postToJSON } from "../../lib/firebase";
@@ -41,6 +42,10 @@ function QuestionPage({ questionMessage, answers, group }) {
 
   return (
     <>
+      <MetaTags
+        title={questionMessage.text.slice(20)}
+        description={questionMessage.text}
+      />
       <RightSection />
       {showSearchBar && <SearchSideBar />}
     </>
