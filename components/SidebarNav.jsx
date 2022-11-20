@@ -9,11 +9,13 @@ import { auth } from "../lib/firebase";
 import Image from "next/image";
 import DropDownMenu from "./RightSection/Menu";
 import { Menu } from "@headlessui/react";
+import { useRouter } from "next/router";
 // import { BsGithub } from "react-icons/bs";
 
 const SidebarNav = () => {
   const { user, username, setUserModal } = useContext(UserContext);
   const { setSelectedGroup, selectedGroup } = useContext(GroupContext);
+  const router = useRouter();
 
   return (
     <div className="  h-16 w-full px-3 py-2">
@@ -52,6 +54,7 @@ const SidebarNav = () => {
           </a>
           <button
             onClick={() => {
+              router.push("/");
               setSelectedGroup({
                 id: "open-ai",
                 name: "Ask a Question",

@@ -8,6 +8,7 @@ import { Menu } from "@headlessui/react";
 import { arrayRemove, collection, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../lib/firebase";
 import { UserContext } from "../../lib/userContext";
+import { useRouter } from "next/router";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -15,12 +16,16 @@ const Header = () => {
   const { selectedGroup, setSelectedGroup, setShowSearchBar } =
     useContext(GroupContext);
   const { user, joinedGroups } = useContext(UserContext);
+  const router = useRouter();
 
   return (
     <div className="flex h-[70px] w-full flex-row justify-between bg-[#F7F7FC] py-4 px-6  ">
       <div className="flex flex-1 flex-row items-center">
         <button
-          onClick={() => setSelectedGroup(null)}
+          onClick={() => {
+            router.push("/");
+            setSelectedGroup(null);
+          }}
           className="block md:hidden"
         >
           <IoArrowBackOutline className=" mr-2 h-5 w-5 text-gray-700 " />

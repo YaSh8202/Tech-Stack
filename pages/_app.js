@@ -7,6 +7,7 @@ import Sidebar from "../components/Sidebar";
 import { GroupContextProvider } from "../lib/groupContext";
 import { UserContextProvider } from "../lib/userContext";
 import "../styles/globals.css";
+import NextNProgress from "nextjs-progressbar";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -17,6 +18,7 @@ function MyApp({ Component, pageProps }) {
         </Head>
         <div className="flex h-screen w-screen flex-row overflow-hidden   ">
           <Sidebar />
+          <NextNProgress />
           <Component {...pageProps} />
           <LoginModal />
         </div>
