@@ -12,6 +12,10 @@ export default function GroupPage({ group }) {
 
   useEffect(() => {
     setSelectedGroup(group);
+
+    return () => {
+      setSelectedGroup(null);
+    };
   }, [group]);
 
   return (

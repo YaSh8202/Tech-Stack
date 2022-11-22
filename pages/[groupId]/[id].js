@@ -23,6 +23,10 @@ function QuestionPage({ questionMessage, answers, group }) {
     setSelectedGroup({ ...group, answerPage: true });
     setMessages([questionMessage, ...answers]);
     setSelectedMessage(questionMessage);
+
+    return () => {
+      setSelectedGroup(null);
+    };
   }, []);
 
   useEffect(() => {

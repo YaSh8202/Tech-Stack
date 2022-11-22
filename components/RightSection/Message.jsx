@@ -54,7 +54,7 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
   const { username, user } = useContext(UserContext);
   const { setSelectedMessage, selectedGroup } = useContext(GroupContext);
   const isSender = user?.uid === sender?.id;
-  const downloadBtn = useRef(null);
+  // const downloadBtn = useRef(null);
   const file = message?.fileMeta;
   const messageRef = useRef(null);
 
@@ -81,8 +81,8 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
     });
   }
 
-  useEffect(() => {
-    if (!message.img || !downloadBtn?.current) return;
+  const downloadImage = () => {
+    // if (!message.img || !downloadBtn?.current) return;
 
     let imageRef = {
       name: message.text,
@@ -94,17 +94,20 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
       xhr.onload = (event) => {
         const blob = xhr.response;
         const URL = window.URL.createObjectURL(blob);
-        if (downloadBtn.current) {
-          downloadBtn.current.href = URL;
-          downloadBtn.current.download = imageRef.name;
-        }
+        const element = document.createElement("a");
+        element.href = URL;
+        element.download = imageRef.name;
+
+        // simulate link click
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
       };
       xhr.open("GET", message.img);
       xhr.send();
     } catch (e) {
       // console.log(e);
     }
-  }, []);
+  };
 
   function renderHTML(text) {
     return mdParser.render(text);
@@ -176,7 +179,11 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
 
         {/* message body */}
         <div
-          className={`${message.isMarkdown ? "ml-auto max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl overflow-auto" : ""}  `}
+          className={`${
+            message.isMarkdown
+              ? "ml-auto max-w-xs overflow-auto md:max-w-md lg:max-w-lg xl:max-w-xl"
+              : ""
+          }  `}
         >
           {message.isMarkdown ? (
             // if message is markdown
@@ -223,14 +230,13 @@ const Message = ({ message, linkedMessage, needHeader, last }) => {
                     </div>
                   )}
                   {
-                    <a
-                      id="download"
-                      ref={downloadBtn}
+                    <button
+                      onClick={downloadImage}
                       className="invisible absolute bottom-1 right-1 rounded-full bg-gray-100 p-1 duration-150 group-hover:visible "
                       title={`Download ${file?.name}`}
                     >
                       <HiDownload className="text-gray-500  " size={16} />
-                    </a>
+                    </button>
                   }
                 </div>
               )}
