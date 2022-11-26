@@ -7,6 +7,7 @@ import {
   where,
   onSnapshot,
   orderBy,
+  limit,
 } from "firebase/firestore";
 import React, { useContext, useEffect } from "react";
 import MetaTags from "../../components/Metatags";
@@ -88,7 +89,8 @@ export async function getServerSideProps(context) {
   const answersRef = query(
     collection(doc(collection(firestore, "Groups"), groupId), "messages"),
     where("repliedTo", "==", id),
-    orderBy("createdAt")
+    orderBy("createdAt"),
+    limit(20)
   );
 
   const answersSnapshot = await getDocs(answersRef);
