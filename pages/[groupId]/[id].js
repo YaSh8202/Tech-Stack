@@ -88,7 +88,8 @@ export async function getServerSideProps(context) {
   const answersRef = query(
     collection(doc(collection(firestore, "Groups"), groupId), "messages"),
     where("repliedTo", "==", id),
-    orderBy("createdAt")
+    orderBy("createdAt"),
+    limit(15)
   );
 
   const answersSnapshot = await getDocs(answersRef);
