@@ -7,6 +7,7 @@ import {
   where,
   onSnapshot,
   orderBy,
+  limit,
 } from "firebase/firestore";
 import React, { useContext, useEffect } from "react";
 import MetaTags from "../../components/Metatags";

@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read;
+
+      match /Groups/{groupId}{
+        allow create: if false;
+      }
+
+      match /users/{userId}{
+        allow read;
+        allow create: if isValidUser();
+      }
+
+      match /usernames/{username}{
+        allow read;
+        allow create: if isValidUsername();
+      }
+      allow write;
+
+      function isValidUser(userId){
+        let isOwner = request.auth.uid == userId;
+        let username = request.resource.data.username;
+        let createdValidUsername = existsAfter(/databases/$(database)/documents/usernames/$(username));
+
+        return isOwner && createdValidUsername;
+      }
+
+      function isValidUsername(username){
+        let isOwner = request.auth.uid == request.resource.data.uid;
+        let isValidLength = username.size() >=3 && username.size() <= 15;
+        let isValidUserDoc = getAfter(/databases/$(database)/documents/users/${request.auth.uid}).data.username == request.resource.data.username;
+
+        return isOwner && isValidLength && isValidUserDoc;
+      }
+
+      function canUpdateGroup(userId){
+        
+      }
+
+    }
+
+  }
+}
